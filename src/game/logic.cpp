@@ -24,7 +24,13 @@
  */
 void Logic::initBoard(char board[][BOARD_N_MAX], const int size) {
     // TODO: implement
-    throw NotImplementedException();
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = 0; j < size; j++)
+        {
+            board[i][j] = '-';
+        }
+    }
 }
 
 /**
@@ -36,8 +42,19 @@ void Logic::initBoard(char board[][BOARD_N_MAX], const int size) {
  */
 bool Logic::isValidMove(const char board[][BOARD_N_MAX], const int size, const int row, const int col) {
     // TODO: implement
-    throw NotImplementedException();
-    return false;
+    if (!(row >= 0 && row < size))
+    {
+        return false;
+    }
+    else if (!(col >= 0 && col < size))
+    {
+        return false;
+    }
+    else if (board[row][col] != '-')
+    {
+        return false;
+    }
+    return true;
 }
 
 /**
@@ -49,7 +66,7 @@ bool Logic::isValidMove(const char board[][BOARD_N_MAX], const int size, const i
  */
 void Logic::makeMove(char board[][BOARD_N_MAX], const int row, const int col, const char symbol) {
     // TODO: implement
-    throw NotImplementedException();
+    board[row][col] = symbol;
 }
 
 /**
@@ -61,7 +78,22 @@ void Logic::makeMove(char board[][BOARD_N_MAX], const int row, const int col, co
  */
 bool Logic::isEmptyHead(const char board[][BOARD_N_MAX], const int size, int x, int y, const char symbol) {
     // TODO: implement
-    throw NotImplementedException();
+    if (!(x >= 0 && x < size))
+    {
+        return true;
+    }
+    else if (!(y >= 0 && y < size))
+    {
+        return true;
+    }
+    else if (board[x][y] == '-')
+    {
+        return true;
+    }
+    else if (board[x][y] == symbol)
+    {
+        return true;
+    }
     return false;
 }
 
@@ -74,7 +106,63 @@ bool Logic::isEmptyHead(const char board[][BOARD_N_MAX], const int size, int x, 
  */
 bool Logic::checkWin(char board[][BOARD_N_MAX], const int size, const char symbol, const int goal, EndRule rule) {
     // TODO: implement
-    throw NotImplementedException();
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = 0; j < size; j++)
+        {
+            if (board[i][j] != symbol)
+            {
+                continue;
+            }
+            //horizontal - vertical - main diagonal - anti diagonal
+            int dx[4] = {0, 1, 1, 1};
+            int dy[4] = {1, 0, 1, -1};
+            for (int d = 0; d < 4; d++)
+            {
+                bool stt = true;
+                for (int k = 1; k < goal; k++)
+                {
+                    int ni = i + k * dx[d];
+                    int nj = j + k * dy[d];
+                    if (ni < 0 || ni >= size || nj < 0 || nj >= size || board[ni][nj] != symbol)
+                    {
+                        stt = false;
+                        break;
+                    }
+                }
+                if (stt)
+                {
+                    int head1_x = i - dx[d];
+                    int head1_y = j - dy[d];
+
+                    int head2_x = i + dx[d] * goal;
+                    int head2_y = j + dy[d] * goal;
+
+                    bool h1 = isEmptyHead(board, size, head1_x, head1_y, symbol);
+                    bool h2 = isEmptyHead(board, size, head2_x, head2_y, symbol);
+
+                    if (rule == EndRule::NONE)
+                    {
+                        return true;
+                    }
+                    else if (rule == EndRule::OPEN_ONE)
+                    {
+                        if (h1 || h2)
+                        {
+                            return true;
+                        }
+                    }
+                    else
+                    {
+                        if (h1 && h2)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+    }
     return false;
 }
 
@@ -87,8 +175,17 @@ bool Logic::checkWin(char board[][BOARD_N_MAX], const int size, const char symbo
  */
 bool Logic::checkDraw(char board[][BOARD_N_MAX], const int size) {
     // TODO: implement
-    throw NotImplementedException();
-    return false;
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = 0; j < size; j++)
+        {
+            if (board[i][j] == '-')
+            {
+                return false;
+            }
+        }
+    }
+    return true;
 }
 
 /**
@@ -105,5 +202,82 @@ std::optional<WinLine> Logic::getWinLine(
     const int goal,
     EndRule rule) {
     // TODO: implement
+    WinLine line;
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = 0; j < size; j++)
+        {
+            if (board[i][j] != symbol)
+            {
+                continue;
+            }
+            //horizontal - vertical - main diagonal - anti diagonal
+            int dx[4] = {0, 1, 1, 1};
+            int dy[4] = {1, 0, 1, -1};
+            for (int d = 0; d < 4; d++)
+            {
+                std::vector<std::pair<int, int>> temp;
+                temp.push_back({i, j});
+                bool stt = true;
+                for (int k = 1; k < goal; k++)
+                {
+                    int ni = i + k * dx[d];
+                    int nj = j + k * dy[d];
+                    if (ni < 0 || ni >= size || nj < 0 || nj >= size || board[ni][nj] != symbol)
+                    {
+                        stt = false;
+                        break;
+                    }
+                    else
+                    {
+                        temp.push_back({ni, nj});
+                    }
+                }
+                if (stt)
+                {
+                    int head1_x = i - dx[d];
+                    int head1_y = j - dy[d];
+
+                    int head2_x = i + dx[d] * goal;
+                    int head2_y = j + dy[d] * goal;
+
+                    bool h1 = isEmptyHead(board, size, head1_x, head1_y, symbol);
+                    bool h2 = isEmptyHead(board, size, head2_x, head2_y, symbol);
+
+                    if (rule == EndRule::NONE)
+                    {
+                        for (auto& [a, b] : temp)
+                        {
+                            line.cells.push_back({a, b});
+                        }
+                        return line;
+                    }
+                    else if (rule == EndRule::OPEN_ONE)
+                    {
+                        if (h1 || h2)
+                        {
+                            for (auto& [a, b] : temp)
+                            {
+                                line.cells.push_back({a, b});
+                            }
+                            return line;
+                        }
+                    }
+                    else
+                    {
+                        if (h1 && h2)
+                        {
+                            for (auto& [a, b] : temp)
+                            {
+                                line.cells.push_back({a, b});
+                            }
+                            return line;
+                        }
+                    }
+                }
+            }
+        }
+    }
     return std::nullopt;
+
 }
