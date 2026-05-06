@@ -56,6 +56,11 @@ class BotLevel3 : public BotLevel2 {
      *   - Không có
      */
     pII hard_level(char board[][BOARD_N_MAX], const int size, const int goal);
+   private:
+    std::vector<pII> getCandidateMoves(const char board[][BOARD_N_MAX], const int size);
+    int getScore(int count, int blocks, int goal);
+    int evaluateBoard(const char board[][BOARD_N_MAX], int size, int goal, char botSymbol, char playerSymbol);
+    int minimax(char board[][BOARD_N_MAX], int size, int goal, char botSymbol, char playerSymbol, int depth, bool isMaximizing, int alpha, int beta);
 
    public:
     /**
