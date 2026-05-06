@@ -38,8 +38,7 @@ BotLevel2::~BotLevel2() {
  */
 pII BotLevel2::getMove(char board[][BOARD_N_MAX], const int size, const int goal) {
     // TODO: gọi simple_heuristic với symbol và op_symbol
-    throw NotImplementedException();
-    return {0, 0};
+    return simple_heuristic(board, size, goal, Bot::symbol, Bot::op_symbol);
 }
 
 /**
@@ -56,6 +55,37 @@ pII BotLevel2::getMove(char board[][BOARD_N_MAX], const int size, const int goal
  */
 pII BotLevel2::simple_heuristic(char board[][BOARD_N_MAX], const int size, const int goal, const char botSymbol, const char playerSymbol) {
     // TODO: implement heuristic
-    throw NotImplementedException();
-    return {-1, -1};
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = 0; j < size; j++)
+        {
+            if (board[i][j] == '-')
+            {
+                board[i][j] = botSymbol;
+                if  (Logic::checkWin(board, size, botSymbol, goal, EndRule::OPEN_TWO))
+                {
+                    board[i][j] = '-';
+                    return {i, j};
+                }
+                board[i][j] = '-';
+            }
+        }
+    }
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = 0; j < size; j++)
+        {
+            if (board[i][j] == '-')
+            {
+                board[i][j] = playerSymbol;
+                if  (Logic::checkWin(board, size, playerSymbol, goal, EndRule::OPEN_TWO))
+                {
+                    board[i][j] = '-';
+                    return {i, j};
+                }
+                board[i][j] = '-';
+            }
+        }
+    }
+    return random_pick(board, size);
 }
