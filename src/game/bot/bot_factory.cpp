@@ -35,20 +35,20 @@
  */
 Bot* BotFactory::createBot(BotLevel level, const char& symbol) {
     // TODO: implement factory logic
-    throw NotImplementedException();
 
     switch (level) {
         case BotLevel::EASY:
             // TODO: tạo bot level EASY (ví dụ BotLevel1)
-            return nullptr;
+            return new BotLevel1(level, symbol);
 
         case BotLevel::MEDIUM:
             // TODO: tạo bot level MEDIUM (ví dụ BotLevel2)
-            return nullptr;
+            return new BotLevel2(level, symbol);
 
         case BotLevel::HARD:
             // TODO: tạo bot level HARD (ví dụ BotLevel3)
-            return nullptr;
+            return new BotLevel3(level, symbol);
+
 
         default:
             // TODO: xử lý level không hợp lệ
