@@ -85,7 +85,7 @@ void TerminalRenderer::showSelectMenu(SelectType selectType, int context) {
             break;
 
         case SelectType::SIZE_UI:
-            std::cout << std::format("Size Input (NxN, 3 <= N <= {})", context) << std::endl;
+            std::cout << std::format("Size Input (NxN, 3 <= N <= {})", BOARD_N_MAX) << std::endl;
             break;
         case SelectType::GOAL_UI:
             std::cout << std::format("Goal Input (3 <= goal <= {})", context) << std::endl;
