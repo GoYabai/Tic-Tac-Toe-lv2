@@ -182,10 +182,12 @@ bool TerminalInteraction::selectSize(int* size) {
     // TODO: Validate range hợp lệ
     if (getInput(size) == false)
     {
+        Logger::log("Please input size!", Logger::Level::WARNING);
         return false;
     }
     if (*size < 3 || *size > BOARD_N_MAX)
     {
+        Logger::log("Input number is out of range!", Logger::Level::WARNING);
         return false;
     }
     return true;
@@ -206,10 +208,12 @@ bool TerminalInteraction::selectGoal(int* goal, const int size) {
     // TODO: Validate điều kiện goal
     if (getInput(goal) == false)
     {
+        Logger::log("Please input size!", Logger::Level::WARNING);
         return false;
     }
     if (*goal < 3 || *goal > size)
     {
+        Logger::log("Input number is out of range!", Logger::Level::WARNING);
         return false;
     }
     return true;
@@ -231,10 +235,12 @@ bool TerminalInteraction::selectGameMode(GameMode* mode) {
     int input;
     if (getInput(&input) == false)
     {
+        Logger::log("Please input!", Logger::Level::WARNING);
         return false;
     }
     if (input < 1 || input > 3)
     {
+        Logger::log("Input number is out of range!", Logger::Level::WARNING);
         return false;
     }
     *mode = static_cast<GameMode>(input - 1);
@@ -258,15 +264,18 @@ bool TerminalInteraction::selectBotLevel(BotLevel* levels, const int index) {
     // TODO: Mapping sang BotLevel
     if (index < 0 || index > 1)
     {
+        Logger::log("Index number is out of range!", Logger::Level::WARNING);
         return false;
     }
     int input;
     if (getInput(&input) == false)
     {
+        Logger::log("Please input!", Logger::Level::WARNING);
         return false;
     }
     if (input < 1 || input > 3)
     {
+        Logger::log("Input number is out of range!", Logger::Level::WARNING);
         return false;
     }
     levels[index] = static_cast<BotLevel>(input - 1);
