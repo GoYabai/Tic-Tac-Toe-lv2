@@ -47,7 +47,13 @@ TerminalRenderer::~TerminalRenderer() {
  */
 void TerminalRenderer::init(const RunConfig& config) {
     // TODO: init renderer theo config
-    throw NotImplementedException();
+    this->clearScreen();
+    if (config.interactive)
+    {
+        std::cout << "========================================" << std::endl;
+        std::cout << "      TIC-TAC-TOE / CARO GAME V2        " << std::endl;
+        std::cout << "========================================" << std::endl;
+    }
 }
 
 /**
@@ -59,7 +65,7 @@ void TerminalRenderer::init(const RunConfig& config) {
  */
 void TerminalRenderer::clearScreen() {
     // TODO: clear screen
-    throw NotImplementedException();
+    std::cout << "\x1B[2J\x1B[H";
 }
 
 /**
@@ -73,7 +79,39 @@ void TerminalRenderer::clearScreen() {
  */
 void TerminalRenderer::showSelectMenu(SelectType selectType, int context) {
     // TODO: render menu theo loại
-    throw NotImplementedException();
+    switch (selectType) {
+        case SelectType::TITLE_UI:
+            std::cout << std::format(">----- Tic-tac-toe [Console v{}] -----<\n\n", VERSION);
+            break;
+
+        case SelectType::SIZE_UI:
+            std::cout << std::format("Size Input (NxN, 3 <= N <= {})", context) << std::endl;
+            break;
+        case SelectType::GOAL_UI:
+            std::cout << std::format("Goal Input (3 <= goal <= {})", context) << std::endl;
+            break;
+
+        case SelectType::GAME_MODE_UI:
+            std::cout << "(1) PvP | (2) PvE | (3) EvE" << std::endl;
+            break;
+
+        case SelectType::BOT_LEVEL_UI:
+            std::cout << "(1) EASY | (2) MEDIUM | (3) HARD" << std::endl;
+            break;
+
+        case SelectType::PLAYER_UI:
+            std::cout << "(row, col)" << std::endl;
+            break;
+
+        case SelectType::MUL_BOT_LEVEL_UI:
+            std::cout << "(bot1_level, bot2_level)" << std::endl;
+            break;
+
+        default:
+            break;
+    }
+
+    return;
 }
 
 /**
@@ -86,7 +124,7 @@ void TerminalRenderer::showSelectMenu(SelectType selectType, int context) {
  */
 void TerminalRenderer::showInvalidSelect(SelectType selectType, int context) {
     // TODO: render invalid message
-    throw NotImplementedException();
+    std::cout << "Invalid select" << std::endl;
 }
 
 /**
@@ -99,7 +137,7 @@ void TerminalRenderer::showInvalidSelect(SelectType selectType, int context) {
  */
 void TerminalRenderer::showValidSelect(SelectType selectType, int context) {
     // TODO: render success message
-    throw NotImplementedException();
+    std::cout << "Valid select received" << std::endl;
 }
 
 /**
@@ -112,8 +150,27 @@ void TerminalRenderer::showValidSelect(SelectType selectType, int context) {
  *   - Bước 3: duyệt board và in từng ô
  */
 void TerminalRenderer::displayBoard(const char board[][BOARD_N_MAX], const int size) {
-    // TODO: render board
-    throw NotImplementedException();
+    std::cout << "   ";
+    for (int j = 0; j < size; j++)
+    {
+        std::cout << std::format("{:2} ", j); 
+    }
+    std::cout << std::endl;
+    std::cout << "  ";
+    for (int j = 0; j < size * 3; j++)
+    {
+        std::cout << "-";
+    }
+    std::cout << std::endl;
+    for (int i = 0; i < size; i++)
+    {
+        std::cout << std::format("{:2}|", i);
+        for (int j = 0; j < size; j++)
+        {
+            std::cout << std::format(" {} ", board[i][j]);
+        }
+        std::cout << std::endl;
+    }
 }
 
 /**
@@ -126,7 +183,15 @@ void TerminalRenderer::displayBoard(const char board[][BOARD_N_MAX], const int s
  */
 void TerminalRenderer::showPlayer(int player, bool is_bot) {
     // TODO: render player info
-    throw NotImplementedException();
+    std::string p = std::to_string((player + 1));
+    if (is_bot)
+    {
+        std::cout << "Bot (Player " << p << ") is thinking..." << std::endl;
+    }
+    else
+    {
+        std::cout << "Player " << p << "'s turn" << std::endl;
+    }
 }
 
 /**
@@ -138,7 +203,9 @@ void TerminalRenderer::showPlayer(int player, bool is_bot) {
  */
 void TerminalRenderer::showMove(const int row, const int col) {
     // TODO: render move
-    throw NotImplementedException();
+    std::string r = std::to_string(row);
+    std::string c = std::to_string(col);
+    std::cout << "Move placed at (" << r << ',' << c << ')' << std::endl;
 }
 
 /**
@@ -150,7 +217,7 @@ void TerminalRenderer::showMove(const int row, const int col) {
  */
 void TerminalRenderer::showInvalidMove() {
     // TODO: render invalid move message
-    throw NotImplementedException();
+    std::cout << "The move is invalid" << std::endl;
 }
 
 /**
@@ -164,7 +231,18 @@ void TerminalRenderer::showInvalidMove() {
  */
 void TerminalRenderer::showResult(const int winner, const bool is_bot, const WinLine* winLine) {
     // TODO: render result
-    throw NotImplementedException();
+    if (winner == -1)
+    {
+        std::cout << "It's a draw!" << std::endl;
+    }
+    else if (is_bot)
+    {
+        std::cout << "Bot wins!" << std::endl;
+    }
+    else
+    {
+        std::cout << "Player " << std::to_string(winner + 1) << " wins!" << std::endl;
+    }
 }
 
 /**
@@ -176,7 +254,7 @@ void TerminalRenderer::showResult(const int winner, const bool is_bot, const Win
  */
 void TerminalRenderer::printResult(const GameResult& gameResult) {
     // TODO: print result đơn giản
-    throw NotImplementedException();
+    std::cout << gameResult.winner << " " << gameResult.turns << std::endl;
 }
 
 /**
