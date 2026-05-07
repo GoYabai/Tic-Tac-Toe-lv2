@@ -9,6 +9,7 @@
 
 #include <format>
 #include <iostream>
+#include <cstdlib>
 
 #include "../game/setup.h"
 #include "../utils/config.h"
@@ -65,7 +66,7 @@ void TerminalRenderer::init(const RunConfig& config) {
  */
 void TerminalRenderer::clearScreen() {
     // TODO: clear screen
-    std::cout << "\x1B[2J\x1B[H";
+    system("cls");
 }
 
 /**
@@ -237,7 +238,7 @@ void TerminalRenderer::showResult(const int winner, const bool is_bot, const Win
     }
     else if (is_bot)
     {
-        std::cout << "Bot wins!" << std::endl;
+        std::cout << "Bot " << winner << " win!"<< std::endl;
     }
     else
     {
