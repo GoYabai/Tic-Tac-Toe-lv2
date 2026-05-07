@@ -96,8 +96,18 @@ bool TerminalInteraction::validateInput(const std::string& input) {
     // TODO: Kiểm tra chuỗi rỗng
     // TODO: Duyệt từng ký tự để đảm bảo toàn bộ là chữ số
     // TODO: Trả về true nếu hợp lệ, ngược lại false
-    throw NotImplementedException();
-    return false;
+    if (input.empty())
+    {
+        return false; 
+    }
+    for (char c : input)
+    {
+        if (!std::isdigit(static_cast<unsigned char>(c)))
+        {
+            return false;
+        }
+    }
+    return true;
 }
 
 /**
@@ -116,8 +126,22 @@ bool TerminalInteraction::getInput(int* val) {
     // TODO: Validate input
     // TODO: Chuyển đổi sang int và gán vào *val
     // TODO: Xử lý exception nếu có
-    throw NotImplementedException();
-    return false;
+    std::string input;
+    std::cin >> input;
+    if (!validateInput(input))
+    {
+        return false;
+    }
+    
+    try
+    {
+        *val = std::stoi(input);
+    } catch (const std::exception& e)
+    {
+        Logger::log("Input number is out of range!", Logger::Level::WARNING);
+        return false;
+    }
+    return true;
 }
 
 /**
@@ -132,8 +156,15 @@ bool TerminalInteraction::getInput(int* val) {
  */
 void TerminalInteraction::pause(int timeout) {
     // TODO: Xử lý pause theo chế độ interactive hoặc delay
-    throw NotImplementedException();
-    return;
+    if (timeout == 0)
+    {
+        std::cin.ignore(10000, '\n');
+        std::cin.get(); 
+    }
+    else if (timeout > 0)
+    {
+        std::this_thread::sleep_for(std::chrono::milliseconds(timeout));
+    }
 }
 
 /**
@@ -149,8 +180,15 @@ void TerminalInteraction::pause(int timeout) {
 bool TerminalInteraction::selectSize(int* size) {
     // TODO: Đọc input size
     // TODO: Validate range hợp lệ
-    throw NotImplementedException();
-    return false;
+    if (getInput(size) == false)
+    {
+        return false;
+    }
+    if (*size < 3 || *size > BOARD_N_MAX)
+    {
+        return false;
+    }
+    return true;
 }
 
 /**
@@ -166,8 +204,15 @@ bool TerminalInteraction::selectSize(int* size) {
 bool TerminalInteraction::selectGoal(int* goal, const int size) {
     // TODO: Đọc input goal
     // TODO: Validate điều kiện goal
-    throw NotImplementedException();
-    return false;
+    if (getInput(goal) == false)
+    {
+        return false;
+    }
+    if (*goal < 3 || *goal > size)
+    {
+        return false;
+    }
+    return true;
 }
 
 /**
@@ -183,8 +228,17 @@ bool TerminalInteraction::selectGoal(int* goal, const int size) {
 bool TerminalInteraction::selectGameMode(GameMode* mode) {
     // TODO: Đọc input mode
     // TODO: Mapping sang enum tương ứng
-    throw NotImplementedException();
-    return false;
+    int input;
+    if (getInput(&input) == false)
+    {
+        return false;
+    }
+    if (input < 1 || input > 3)
+    {
+        return false;
+    }
+    *mode = static_cast<GameMode>(input - 1);
+    return true;
 }
 
 /**
@@ -202,8 +256,21 @@ bool TerminalInteraction::selectBotLevel(BotLevel* levels, const int index) {
     // TODO: Đọc input bot level
     // TODO: Validate index
     // TODO: Mapping sang BotLevel
-    throw NotImplementedException();
-    return false;
+    if (index < 0 || index > 1)
+    {
+        return false;
+    }
+    int input;
+    if (getInput(&input) == false)
+    {
+        return false;
+    }
+    if (input < 1 || input > 3)
+    {
+        return false;
+    }
+    levels[index] = static_cast<BotLevel>(input - 1);
+    return true;
 }
 
 /**
@@ -218,8 +285,15 @@ bool TerminalInteraction::selectBotLevel(BotLevel* levels, const int index) {
  */
 bool TerminalInteraction::getPlayerMove(int* row, int* col) {
     // TODO: Đọc row và col
-    throw NotImplementedException();
-    return false;
+    if (!getInput(row))
+    {
+        return false;
+    }
+    if (!getInput(col))
+    {
+        return false;
+    }
+    return true;
 }
 
 /**
