@@ -1,0 +1,18 @@
+# ninja log v7
+16	2108	7998456157455403	CMakeFiles/game.dir/src/game/bot/bot_factory.cpp.obj	fbe5623711a931f9
+8	2171	7998456157294535	CMakeFiles/game.dir/src/game/bot/bot.cpp.obj	149c8de3bcafc40c
+98	2189	7998456158311014	CMakeFiles/game.dir/src/game/interface/i_interaction.cpp.obj	b74aed741e644081
+119	2523	7998456158525220	CMakeFiles/game.dir/src/game/interface/i_renderer.cpp.obj	b04320efc90a166d
+26	2568	7998456157572131	CMakeFiles/game.dir/src/game/bot/bot_lv1.cpp.obj	e5f3da5500c242d6
+43	2596	7998456157752364	CMakeFiles/game.dir/src/game/bot/bot_lv2.cpp.obj	d0b024987f6d1766
+62	3172	7998456157938743	CMakeFiles/game.dir/src/game/bot/bot_lv3.cpp.obj	e9f7c970eb219f98
+2116	3820	7998456178497494	CMakeFiles/game.dir/src/utils/config.cpp.obj	27d523f26435b788
+135	3902	7998456158693338	CMakeFiles/game.dir/src/game/logic.cpp.obj	7c536862494cb1d5
+2172	4007	7998456179113363	CMakeFiles/game.dir/src/utils/logger.cpp.obj	6631dab11da2748b
+154	4246	7998456158958795	CMakeFiles/game.dir/src/main.cpp.obj	d2f6ab7dce6f1838
+223	4872	7998456159550352	CMakeFiles/game.dir/src/sdl/renderer.cpp.obj	67a47cbf854acba2
+180	4885	7998456159444271	CMakeFiles/game.dir/src/sdl/interaction.cpp.obj	783850b53d1e4481
+241	7524	7998456159732117	CMakeFiles/game.dir/src/terminal/renderer.cpp.obj	9cd6491f54ee18c1
+232	7537	7998456159636421	CMakeFiles/game.dir/src/terminal/interaction.cpp.obj	929dc261ec2310f
+80	7848	7998456158126833	CMakeFiles/game.dir/src/game/engine.cpp.obj	48e362ee87a80e13
+7849	8238	7998456235784376	game.exe	4e818336165960a3
