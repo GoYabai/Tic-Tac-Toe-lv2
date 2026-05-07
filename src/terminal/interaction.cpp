@@ -158,8 +158,8 @@ void TerminalInteraction::pause(int timeout) {
     // TODO: Xử lý pause theo chế độ interactive hoặc delay
     if (timeout == 0)
     {
-        std::cin.ignore(10000, '\n');
-        std::cin.get(); 
+        std::cout << std::endl;
+        system("pause");
     }
     else if (timeout > 0)
     {
