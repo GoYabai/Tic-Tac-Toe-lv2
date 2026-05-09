@@ -28,6 +28,21 @@ class SDLRenderer : public I_Renderer {
    private:
     SDL_Window* window = nullptr;      // Con trỏ tới cửa sổ SDL
     SDL_Renderer* renderer = nullptr;  // Context để vẽ (rendering)
+    TTF_Font* fontTitle = nullptr;
+    TTF_Font* fontNormal = nullptr;
+    TTF_Font* fontSmall = nullptr;
+
+    int screenWidth;
+    int screenHeight;
+    int boardPadding;
+
+    const SDL_Color COLOR_BG       = {250, 248, 239, 255};
+    const SDL_Color COLOR_BOARD    = {187, 173, 160, 255};
+    const SDL_Color COLOR_CELL     = {205, 193, 180, 255};
+    const SDL_Color COLOR_TEXT     = {119, 110, 101, 255};
+    const SDL_Color COLOR_X        = {242, 177, 121, 255};
+    const SDL_Color COLOR_O        = {114, 203, 224, 255};
+    const SDL_Color COLOR_BTN_HOVER= {143, 122, 102, 255};
 
     /**
      * Mô tả: Đẩy nội dung đã vẽ lên màn hình (swap buffer).
@@ -49,6 +64,10 @@ class SDLRenderer : public I_Renderer {
      * Tác dụng phụ: Vẽ trực tiếp lên renderer.
      */
     void drawRect(int x, int y, int w, int h, SDL_Color color, bool filled);
+
+    void drawButton(const std::string& text, int y);
+    void renderText(TTF_Font* targetFont, const std::string& text, int x, int y, SDL_Color color);
+    void renderTextCentered(TTF_Font* targetFont, const std::string& text, int y, SDL_Color color);
 
    public:
     /**
@@ -181,4 +200,5 @@ class SDLRenderer : public I_Renderer {
      *   - Shutdown SDL subsystem.
      */
     void close() override;
+
 };
