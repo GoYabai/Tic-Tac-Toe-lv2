@@ -36,6 +36,9 @@ class SDLRenderer : public I_Renderer {
     int screenHeight;
     int boardPadding;
 
+    int lastRow = -1;
+    int lastCol = -1;
+
     const SDL_Color COLOR_BG            = {250, 248, 239, 255};
     const SDL_Color COLOR_BOARD         = {187, 173, 160, 255};
     const SDL_Color COLOR_CELL          = {205, 193, 180, 255};

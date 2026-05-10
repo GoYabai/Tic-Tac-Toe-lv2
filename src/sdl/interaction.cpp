@@ -547,56 +547,46 @@ bool SDLInteraction::getPlayerMove(int* row, int* col) {
     bool waiting = true;
     std::string inputBuffer = "";
 
-    // Bật thu thập text để hỗ trợ người dùng nhập tọa độ qua bàn phím
     SDL_StartTextInput();
-    
-    // In thông báo ra console để hướng dẫn người chơi hệ bàn phím
     std::cout << "[SDL Input] Your turn. Click a cell directly OR type 'row col' (e.g. 0 1) and press ENTER: " << std::flush;
 
-    // 1. Lấy kích thước bàn cờ hiện tại đã được ghim từ hàm selectSize
     int size = this->currentBoardSize;
 
-    // 2. TÁI HIỆN CHÍNH XÁC CÔNG THỨC TOÁN HỌC UI CỦA HỌA SĨ
-    // Các thông số này phải khớp 100% với hàm displayBoard trong renderer.cpp
     int gap = 8;
     int boardSizePx = screenHeight - 2 * boardPadding;
     int cellSizePx = (boardSizePx - gap * (size + 1)) / size;
     int startX = (screenWidth - boardSizePx) / 2;
     int startY = boardPadding;
 
-    // Dọn sạch các event click/phím rác trước khi vào lượt
     SDL_FlushEvents(SDL_FIRSTEVENT, SDL_LASTEVENT);
 
     while (waiting) {
+        // ĐÃ XÓA BLOCK GỌI sdlRenderer->redrawCachedBoard() TẠI ĐÂY
+
         if (SDL_WaitEvent(&event)) {
             if (waitForQuit(event)) {}
 
-            // =================================================================
             // A. XỬ LÝ BÀN PHÍM (Gõ tọa độ: "hàng cột")
-            // =================================================================
             if (event.type == SDL_TEXTINPUT) {
                 char c = event.text.text[0];
-                // Chỉ nhận các ký tự số và dấu cách
                 if ((c >= '0' && c <= '9') || c == ' ') {
                     inputBuffer += c;
-                    std::cout << c << std::flush; // Echo ngay ra console
+                    std::cout << c << std::flush;
                 }
             }
             else if (event.type == SDL_KEYDOWN) {
                 if (event.key.keysym.sym == SDLK_BACKSPACE && !inputBuffer.empty()) {
                     inputBuffer.pop_back();
-                    std::cout << "\b \b" << std::flush; // Xóa lùi trên console
+                    std::cout << "\b \b" << std::flush;
                 }
                 else if (event.key.keysym.sym == SDLK_RETURN || event.key.keysym.sym == SDLK_KP_ENTER) {
                     std::cout << std::endl;
                     
-                    // Dùng stringstream để tách chuỗi vừa gõ thành 2 số r và c
                     if (!inputBuffer.empty()) {
                         std::stringstream ss(inputBuffer);
                         int r = -1, c = -1;
                         
                         if (ss >> r >> c) {
-                            // Kiểm tra tọa độ có nằm trong phạm vi bàn cờ không
                             if (r >= 0 && r < size && c >= 0 && c < size) {
                                 *row = r;
                                 *col = c;
@@ -614,23 +604,16 @@ bool SDLInteraction::getPlayerMove(int* row, int* col) {
                 }
             }
 
-            // =================================================================
-            // B. XỬ LÝ CLICK CHUỘT (Cách chính, cực kỳ trực quan)
-            // =================================================================
+            // B. XỬ LÝ CLICK CHUỘT
             else if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT) {
                 int mx = event.button.x;
                 int my = event.button.y;
 
-                // Quét qua toàn bộ các ô trên lưới cờ
                 for (int i = 0; i < size; i++) {
                     for (int j = 0; j < size; j++) {
-                        // Tính toán chính xác ranh giới (Bounding Box) của ô (i, j)
                         int cellX = startX + gap + j * (cellSizePx + gap);
                         int cellY = startY + gap + i * (cellSizePx + gap);
 
-                        // Kiểm tra điểm click có lọt thỏm bên trong lòng ô cờ không
-                        // 🌟 ĐIỂM SÁNG UX: Công thức này tự động loại trừ các rãnh gap, 
-                        // bấm trúng rãnh sẽ không bị tính là đánh nhầm!
                         if (mx >= cellX && mx <= cellX + cellSizePx &&
                             my >= cellY && my <= cellY + cellSizePx) {
                             

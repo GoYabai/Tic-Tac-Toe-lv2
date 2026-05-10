@@ -175,6 +175,10 @@ void SDLRenderer::renderTextCentered(TTF_Font *targetFont, const std::string &te
  */
 void SDLRenderer::showSelectMenu(SelectType selectType, int context)
 {
+    if (selectType == SelectType::PLAYER_UI)
+    {
+        return;
+    }
     clearScreen();
 
     std::string titleText = "";
@@ -293,11 +297,6 @@ void SDLRenderer::showSelectMenu(SelectType selectType, int context)
         break;
     }
 
-    case SelectType::PLAYER_UI:
-        titleText = "YOUR TURN";
-        promptText = "Select a cell on the board";
-        break;
-
     case SelectType::MUL_BOT_LEVEL_UI:
         titleText = "BOT vs BOT SETUP";
         promptText = "Enter (bot1_level, bot2_level) in terminal";
@@ -380,6 +379,7 @@ void SDLRenderer::showValidSelect(SelectType selectType, int context)
  */
 void SDLRenderer::displayBoard(const char board[][BOARD_N_MAX], const int size)
 {
+    clearScreen();
     int gap = 8;
     int boardSizePx = screenHeight - 2 * boardPadding;
     int cellSizePx = (boardSizePx - gap * (size + 1)) / size;
@@ -397,6 +397,7 @@ void SDLRenderer::displayBoard(const char board[][BOARD_N_MAX], const int size)
         renderText(fontNormal, numStr, startX - 35, centerOfCellY - 14, COLOR_TEXT);
     }
 
+    // Vòng lặp vẽ ô cờ thuần túy, sạch sẽ
     for (int i = 0; i < size; i++)
     {
         for (int j = 0; j < size; j++)
@@ -404,17 +405,25 @@ void SDLRenderer::displayBoard(const char board[][BOARD_N_MAX], const int size)
             int cellX = startX + gap + j * (cellSizePx + gap);
             int cellY = startY + gap + i * (cellSizePx + gap);
 
+            // Vẽ nền ô cờ tĩnh
             drawRect(cellX, cellY, cellSizePx, cellSizePx, COLOR_CELL, true);
 
+            // Vẽ ký hiệu X hoặc O
             if (board[i][j] == 'X' || board[i][j] == 'O')
             {
                 std::string mark(1, board[i][j]);
                 SDL_Color markColor = (board[i][j] == 'X') ? COLOR_X : COLOR_O;
-
                 renderText(fontTitle, mark, cellX + 15, cellY + 10, markColor);
             }
         }
     }
+
+    if (lastRow != -1 && lastCol != -1)
+    {
+        std::string moveText = std::format("Last move placed at: {}, {}", lastRow, lastCol);
+        renderTextCentered(fontSmall, moveText, screenHeight - 80, COLOR_TEXT);
+    }
+
     renderPresent();
 }
 
@@ -429,7 +438,9 @@ void SDLRenderer::displayBoard(const char board[][BOARD_N_MAX], const int size)
  */
 void SDLRenderer::showMove(const int row, const int col)
 {
-    // TODO: Highlight move
+    this->lastRow = row;
+    this->lastCol = col;
+    
     std::string moveText = std::format("Last move placed at: {}, {}", row, col);
     renderTextCentered(fontSmall, moveText, screenHeight - 80, COLOR_TEXT);
     renderPresent();
@@ -445,8 +456,7 @@ void SDLRenderer::showMove(const int row, const int col)
  */
 void SDLRenderer::showInvalidMove()
 {
-    // TODO: Render invalid move message
-    renderTextCentered(fontNormal, "INVALID MOVE! Cell taken or out of bounds.", 30, ERROR_COLOR);
+    renderTextCentered(fontNormal, "INVALID MOVE! Cell taken or out of bounds.", screenHeight - 50, ERROR_COLOR);
     renderPresent();
 }
 
@@ -461,12 +471,12 @@ void SDLRenderer::showInvalidMove()
  */
 void SDLRenderer::showPlayer(const int player, const bool is_bot)
 {
-    // TODO: Render player info
     std::string playerName = is_bot ? std::format("BOT {}", player + 1) : std::format("PLAYER {}", player + 1);
     std::string mark = (player == 0) ? "X" : "O";
     std::string turnText = std::format("TURN: {} ({})", playerName, mark);
     SDL_Color playerColor = (player == 0) ? COLOR_X : COLOR_O;
-    renderTextCentered(fontNormal, turnText, 30, playerColor);
+
+    renderText(fontNormal, turnText, 50, 50, playerColor);
     renderPresent();
 }
 
