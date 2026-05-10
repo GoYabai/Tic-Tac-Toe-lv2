@@ -1,13 +1,15 @@
 Tic-tac-toe Game (Version: 0.4.25022870 by baluong.87)
 ------------------------------------------------
-[INFO] - [2026-05-07 15:45:04] Logger initialized!
-[INFO] - [2026-05-07 15:45:04] Terminal Renderer initialized!
-[INFO] - [2026-05-07 15:45:04] Terminal Interaction initialized!
-[INFO] - [2026-05-07 15:45:04] Infra initialized!
-[INFO] - [2026-05-07 15:45:04] Engine initializing . . .
-[ERROR] - [2026-05-07 15:45:04] failed to open input file, using console.
-[INFO] - [2026-05-07 15:45:04] Engine initialized!
-[INFO] - [2026-05-07 15:45:04] [Engine] Starting game . . .
-[WARN] - [2026-05-07 15:45:34] Please input size!
-[WARN] - [2026-05-07 15:45:34] Please input size!
-[WARN] - [2026-05-07 15:45:34] Please input size!
+[INFO] - [2026-05-10 16:39:59] Logger initialized!
+[INFO] - [2026-05-10 16:39:59] SDL Renderer initialized!
+[INFO] - [2026-05-10 16:39:59] SDL Interaction initialized!
+[INFO] - [2026-05-10 16:39:59] Infra initialized!
+[INFO] - [2026-05-10 16:39:59] Engine initializing . . .
+[INFO] - [2026-05-10 16:39:59] Engine initialized!
+[INFO] - [2026-05-10 16:39:59] [Engine] Starting game . . .
+[WARN] - [2026-05-10 16:40:23] Some functions is not implemented. Cleaning up...
+[INFO] - [2026-05-10 16:40:23] Engine closing . . .
+[INFO] - [2026-05-10 16:40:23] Engine closed!
+[INFO] - [2026-05-10 16:40:23] Engine destroyed!
+[INFO] - [2026-05-10 16:40:23] Infra destroyed!
+[INFO] - [2026-05-10 16:40:23] Logger closing . . .

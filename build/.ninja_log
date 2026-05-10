@@ -16,3 +16,6 @@
 200	7683	7998465666747886	CMakeFiles/game.dir/src/terminal/interaction.cpp.obj	929dc261ec2310f
 85	7984	7998465665555831	CMakeFiles/game.dir/src/game/engine.cpp.obj	48e362ee87a80e13
 7985	8307	7998465744507630	game.exe	4e818336165960a3
+39	1695	8001090341861515	CMakeFiles/game.dir/src/main.cpp.obj	d2f6ab7dce6f1838
+47	3069	8001090341878580	CMakeFiles/game.dir/src/sdl/renderer.cpp.obj	67a47cbf854acba2
+3069	3902	8001090372163866	game.exe	4e818336165960a3
