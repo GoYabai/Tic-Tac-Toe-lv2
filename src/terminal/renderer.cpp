@@ -238,7 +238,7 @@ void TerminalRenderer::showResult(const int winner, const bool is_bot, const Win
     }
     else if (is_bot)
     {
-        std::cout << "Bot " << winner << " win!"<< std::endl;
+        std::cout << "Bot " << std::to_string(winner + 1) << " win!"<< std::endl;
     }
     else
     {
