@@ -84,11 +84,15 @@ int main(int argc, char* argv[]) {
     } else {
         // sử dụng SDL (GUI)
         // NOTE: phần này có thể chưa hoàn thiện đầy đủ
-        iRenderer = new SDLRenderer();
+        SDLRenderer* sdlRenderer = new SDLRenderer();
+        iRenderer = sdlRenderer;
         Logger::log("SDL Renderer initialized!");
 
-        iInteraction = new SDLInteraction();
+        SDLInteraction* sdlInteraction = new SDLInteraction();
+        sdlInteraction->setRenderer(sdlRenderer);
+        iInteraction = sdlInteraction;
         Logger::log("SDL Interaction initialized!");
+
     }
     Logger::log("Infra initialized!");
 

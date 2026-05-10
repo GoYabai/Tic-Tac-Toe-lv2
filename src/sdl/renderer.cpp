@@ -189,14 +189,80 @@ void SDLRenderer::showSelectMenu(SelectType selectType, int context)
         break;
 
     case SelectType::SIZE_UI:
-        titleText = "BOARD SIZE";
-        promptText = std::format("Input size (3 <= N <= {}):", BOARD_N_MAX);
-        break;
+    {
+        titleText = "BOARD SIZE CONFIG";
+        promptText = "Select (3-12) or Type:";
 
-    case SelectType::GOAL_UI:
-        titleText = "WINNING GOAL";
-        promptText = std::format("Input goal (3 <= goal <= {}):", context);
+        renderTextCentered(fontTitle, titleText, 100, COLOR_TEXT);
+        renderTextCentered(fontNormal, promptText, 170, COLOR_TEXT);
+
+        int btnW = 70, btnH = 60, gap = 15;
+        int startX = (screenWidth - (5 * btnW + 4 * gap)) / 2;
+
+        // 1. Vẽ Lưới nút từ 3 -> 12 (2 hàng, mỗi hàng 5 nút)
+        for (int i = 0; i < 10; i++)
+        {
+            int val = i + 3;
+            int row = i / 5;
+            int col = i % 5;
+            int x = startX + col * (btnW + gap);
+            int y = 230 + row * (btnH + gap);
+
+            drawRect(x, y, btnW, btnH, BTN_COLOR, true);
+            renderTextCentered(fontNormal, std::to_string(val), y + 15, BTN_TEXT_COLOR);
+        }
+
+        int bottomY = 400;
+        drawRect(startX, bottomY, 200, 60, COLOR_CELL, true);
+        renderText(fontNormal, std::to_string(context), startX + 20, bottomY + 15, COLOR_TEXT);
+
+        drawRect(startX + 215, bottomY, 80, 60, ERROR_COLOR, true);
+        renderText(fontNormal, "DEL", startX + 225, bottomY + 15, BTN_TEXT_COLOR);
+
+        drawRect(startX + 310, bottomY, 100, 60, SUCCESS_COLOR, true);
+        renderText(fontNormal, "OK", startX + 335, bottomY + 15, BTN_TEXT_COLOR);
         break;
+    }
+
+    case SelectType::GOAL_UI: {
+            // Giải nén bit: Lấy 16 bit đầu làm maxSize, 16 bit sau làm số đang hiển thị
+            int maxSize = (context >> 16) & 0xFFFF;
+            int currentVal = context & 0xFFFF;
+
+            titleText = "WINNING GOAL CONFIG";
+            promptText = std::format("Select (3-{}) or Type:", maxSize);
+
+            renderTextCentered(fontTitle, titleText, 100, COLOR_TEXT);
+            renderTextCentered(fontNormal, promptText, 170, COLOR_TEXT);
+
+            int btnW = 70, btnH = 60, gap = 15;
+            int startX = (screenWidth - (5 * btnW + 4 * gap)) / 2;
+
+            // 1. ĐIỂM SÁNG UX: Chỉ vẽ ra các nút bấm hợp lệ từ 3 đến maxSize
+            int maxButtons = maxSize - 3 + 1;
+            for (int i = 0; i < maxButtons; i++) {
+                int val = i + 3;
+                int row = i / 5;
+                int col = i % 5;
+                int x = startX + col * (btnW + gap);
+                int y = 230 + row * (btnH + gap);
+
+                drawRect(x, y, btnW, btnH, BTN_COLOR, true);
+                renderTextCentered(fontNormal, std::to_string(val), y + 15, BTN_TEXT_COLOR);
+            }
+
+            // 2. Vẽ Khung hiển thị & Các nút điều khiển DEL, OK
+            int bottomY = 400;
+            drawRect(startX, bottomY, 200, 60, COLOR_CELL, true);
+            renderText(fontNormal, std::to_string(currentVal), startX + 20, bottomY + 15, COLOR_TEXT);
+
+            drawRect(startX + 215, bottomY, 80, 60, ERROR_COLOR, true);
+            renderText(fontNormal, "DEL", startX + 225, bottomY + 15, BTN_TEXT_COLOR);
+
+            drawRect(startX + 310, bottomY, 100, 60, SUCCESS_COLOR, true);
+            renderText(fontNormal, "OK", startX + 335, bottomY + 15, BTN_TEXT_COLOR);
+            break;
+        }
 
     case SelectType::PLAYER_UI:
         titleText = "YOUR TURN";
@@ -393,9 +459,12 @@ void SDLRenderer::showResult(const int winner, const bool is_bot, const WinLine 
     std::string resultText = "";
     SDL_Color winColor = COLOR_TEXT;
 
-    if (winner == -1) {
+    if (winner == -1)
+    {
         resultText = "IT'S A DRAW!";
-    } else {
+    }
+    else
+    {
         std::string type = is_bot ? "BOT" : "PLAYER";
         resultText = std::format("{} {} WINS!", type, winner + 1);
         winColor = (winner == 0) ? COLOR_X : COLOR_O;

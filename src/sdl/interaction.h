@@ -13,6 +13,8 @@
 #include "../game/setup.h"
 #include "../utils/config.h"
 
+#include "../game/interface/i_renderer.h"
+
 /* ---------- Declarations ---------- */
 
 /**
@@ -33,6 +35,14 @@ class SDLInteraction : public I_Interaction {
      * Tác dụng phụ: Block cho đến khi có event.
      */
     bool waitForQuit(SDL_Event& e);
+
+    int screenWidth;
+    int screenHeight;
+    int boardPadding;
+
+    I_Renderer* renderer = nullptr;
+
+    int currentBoardSize = 3;
 
    public:
     /**
@@ -124,4 +134,8 @@ class SDLInteraction : public I_Interaction {
      *   - Giải phóng tài nguyên liên quan đến event (nếu có).
      */
     void close() override;
+
+    void setRenderer(I_Renderer* currentRenderer) {
+        this->renderer = currentRenderer;
+    }
 };
