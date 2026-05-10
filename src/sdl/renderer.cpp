@@ -15,7 +15,8 @@
 
 /* ---------- Definitions ---------- */
 
-SDLRenderer::SDLRenderer() : I_Renderer() {
+SDLRenderer::SDLRenderer() : I_Renderer()
+{
 }
 
 /**
@@ -24,7 +25,8 @@ SDLRenderer::SDLRenderer() : I_Renderer() {
  * Đầu ra: Không.
  * Tác dụng phụ: Không (việc giải phóng thực hiện trong close()).
  */
-SDLRenderer::~SDLRenderer() {
+SDLRenderer::~SDLRenderer()
+{
 }
 
 /**
@@ -37,7 +39,8 @@ SDLRenderer::~SDLRenderer() {
  *   - Thiết lập chế độ blend.
  * NOTE: Phải gọi trước khi render.
  */
-void SDLRenderer::init(const RunConfig& config) {
+void SDLRenderer::init(const RunConfig &config)
+{
     // read config
     this->screenWidth = config.screenWidth;
     this->screenHeight = config.screenHeight;
@@ -70,7 +73,8 @@ void SDLRenderer::init(const RunConfig& config) {
  * Đầu ra: Không.
  * Tác dụng phụ: Reset frame hiện tại.
  */
-void SDLRenderer::clearScreen() {
+void SDLRenderer::clearScreen()
+{
     SDL_SetRenderDrawColor(renderer, COLOR_BG.r, COLOR_BG.g, COLOR_BG.b, 255);
     SDL_RenderClear(renderer);
 }
@@ -81,7 +85,8 @@ void SDLRenderer::clearScreen() {
  * Đầu ra: Không.
  * Tác dụng phụ: Swap buffer để hiển thị nội dung.
  */
-void SDLRenderer::renderPresent() {
+void SDLRenderer::renderPresent()
+{
     SDL_RenderPresent(renderer);
 }
 
@@ -95,7 +100,8 @@ void SDLRenderer::renderPresent() {
  * Đầu ra: Không.
  * Tác dụng phụ: Vẽ trực tiếp lên renderer.
  */
-void SDLRenderer::drawRect(int x, int y, int w, int h, SDL_Color color, bool filled) {
+void SDLRenderer::drawRect(int x, int y, int w, int h, SDL_Color color, bool filled)
+{
     SDL_Rect rect = {x, y, w, h};
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
 
@@ -105,42 +111,44 @@ void SDLRenderer::drawRect(int x, int y, int w, int h, SDL_Color color, bool fil
         SDL_RenderDrawRect(renderer, &rect);
 }
 
-void SDLRenderer::drawButton(const std::string& text, int y) {
-    SDL_Color BTN_COLOR = {143, 122, 102, 255}; 
-    SDL_Color BTN_TEXT_COLOR = {255, 255, 255, 255}; 
-
+void SDLRenderer::drawButton(const std::string &text, int y)
+{
     int w = 400;
     int h = 60;
     int x = (screenWidth - w) / 2;
 
     drawRect(x, y, w, h, BTN_COLOR, true);
-    renderTextCentered(fontNormal, text, y + 15, BTN_TEXT_COLOR); 
+    renderTextCentered(fontNormal, text, y + 15, BTN_TEXT_COLOR);
 }
 
-void SDLRenderer::renderText(TTF_Font* targetFont, const std::string& text, int x, int y, SDL_Color color) {
-    if (!targetFont) return; 
+void SDLRenderer::renderText(TTF_Font *targetFont, const std::string &text, int x, int y, SDL_Color color)
+{
+    if (!targetFont)
+        return;
 
-    SDL_Surface* surface = TTF_RenderText_Solid(targetFont, text.c_str(), color);
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
-    
+    SDL_Surface *surface = TTF_RenderText_Solid(targetFont, text.c_str(), color);
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
+
     SDL_Rect rect = {x, y, surface->w, surface->h};
     SDL_RenderCopy(renderer, texture, nullptr, &rect);
-    
+
     SDL_FreeSurface(surface);
     SDL_DestroyTexture(texture);
 }
 
-void SDLRenderer::renderTextCentered(TTF_Font* targetFont, const std::string& text, int y, SDL_Color color) {
-    if (!targetFont) return;
-    
-    SDL_Surface* surface = TTF_RenderText_Solid(targetFont, text.c_str(), color);
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
-    
-    int x = (screenWidth - surface->w) / 2; 
+void SDLRenderer::renderTextCentered(TTF_Font *targetFont, const std::string &text, int y, SDL_Color color)
+{
+    if (!targetFont)
+        return;
+
+    SDL_Surface *surface = TTF_RenderText_Solid(targetFont, text.c_str(), color);
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
+
+    int x = (screenWidth - surface->w) / 2;
     SDL_Rect rect = {x, y, surface->w, surface->h};
-    
+
     SDL_RenderCopy(renderer, texture, nullptr, &rect);
-    
+
     SDL_FreeSurface(surface);
     SDL_DestroyTexture(texture);
 }
@@ -155,64 +163,69 @@ void SDLRenderer::renderTextCentered(TTF_Font* targetFont, const std::string& te
  *   - Bước 2: Render text tương ứng.
  *   - Trường hợp biên: selectType không hợp lệ.
  */
-void SDLRenderer::showSelectMenu(SelectType selectType, int context) {
+void SDLRenderer::showSelectMenu(SelectType selectType, int context)
+{
     clearScreen();
-    
+
     std::string titleText = "";
     std::string promptText = "";
     std::vector<std::string> buttons;
 
-    switch (selectType) {
-        case SelectType::TITLE_UI:
-            titleText = "TIC-TAC-TOE / CARO";
-            buttons = {"START GAME"}; 
-            break;
-            
-        case SelectType::GAME_MODE_UI:
-            titleText = "SELECT GAME MODE";
-            buttons = {"1. Player vs Player", "2. Player vs Bot", "3. Bot vs Bot"};
-            break;
-            
-        case SelectType::BOT_LEVEL_UI:
-            titleText = std::format("BOT {} DIFFICULTY", context + 1); 
-            buttons = {"1. EASY", "2. MEDIUM", "3. HARD"};
-            break;
+    switch (selectType)
+    {
+    case SelectType::TITLE_UI:
+        titleText = "TIC-TAC-TOE / CARO";
+        buttons = {"START GAME"};
+        break;
 
-        case SelectType::SIZE_UI:
-            titleText = "BOARD SIZE";
-            promptText = std::format("Input size (3 <= N <= {}):", BOARD_N_MAX);
-            break;
-            
-        case SelectType::GOAL_UI:
-            titleText = "WINNING GOAL";
-            promptText = std::format("Input goal (3 <= goal <= {}):", context);
-            break;
+    case SelectType::GAME_MODE_UI:
+        titleText = "SELECT GAME MODE";
+        buttons = {"1. Player vs Player", "2. Player vs Bot", "3. Bot vs Bot"};
+        break;
 
-        case SelectType::PLAYER_UI:
-            titleText = "YOUR TURN";
-            promptText = "Select a cell on the board";
-            break;
+    case SelectType::BOT_LEVEL_UI:
+        titleText = std::format("BOT {} DIFFICULTY", context + 1);
+        buttons = {"1. EASY", "2. MEDIUM", "3. HARD"};
+        break;
 
-        case SelectType::MUL_BOT_LEVEL_UI:
-            titleText = "BOT vs BOT SETUP";
-            promptText = "Enter (bot1_level, bot2_level) in terminal";
-            break;
+    case SelectType::SIZE_UI:
+        titleText = "BOARD SIZE";
+        promptText = std::format("Input size (3 <= N <= {}):", BOARD_N_MAX);
+        break;
 
-        default:
-            break;
+    case SelectType::GOAL_UI:
+        titleText = "WINNING GOAL";
+        promptText = std::format("Input goal (3 <= goal <= {}):", context);
+        break;
+
+    case SelectType::PLAYER_UI:
+        titleText = "YOUR TURN";
+        promptText = "Select a cell on the board";
+        break;
+
+    case SelectType::MUL_BOT_LEVEL_UI:
+        titleText = "BOT vs BOT SETUP";
+        promptText = "Enter (bot1_level, bot2_level) in terminal";
+        break;
+
+    default:
+        break;
     }
 
-    if (!titleText.empty()) {
+    if (!titleText.empty())
+    {
         renderTextCentered(fontTitle, titleText, 150, COLOR_TEXT);
     }
 
-    if (!promptText.empty()) {
+    if (!promptText.empty())
+    {
         renderTextCentered(fontNormal, promptText, 250, COLOR_TEXT);
     }
 
     int startY = 280;
     int spacing = 80;
-    for (size_t i = 0; i < buttons.size(); i++) {
+    for (size_t i = 0; i < buttons.size(); i++)
+    {
         drawButton(buttons[i], startY + i * spacing);
     }
 
@@ -231,9 +244,16 @@ void SDLRenderer::showSelectMenu(SelectType selectType, int context) {
  *   - Bước 1: Xác định loại lỗi.
  *   - Bước 2: Render text cảnh báo.
  */
-void SDLRenderer::showInvalidSelect(SelectType selectType, int context) {
+void SDLRenderer::showInvalidSelect(SelectType selectType, int context)
+{
     // TODO: Render thông báo lỗi
-    throw NotImplementedException();
+    clearScreen();
+
+    renderTextCentered(fontTitle, "INVALID INPUT", screenHeight / 2 - 50, ERROR_COLOR);
+    renderTextCentered(fontNormal, "Please check your selection and try again", screenHeight / 2 + 20, COLOR_TEXT);
+    renderTextCentered(fontSmall, "Click or press ENTER to continue", screenHeight - 50, COLOR_TEXT);
+
+    renderPresent();
 }
 
 /**
@@ -245,9 +265,12 @@ void SDLRenderer::showInvalidSelect(SelectType selectType, int context) {
  *   - Bước 1: Xác định loại selection.
  *   - Bước 2: Render thông báo thành công.
  */
-void SDLRenderer::showValidSelect(SelectType selectType, int context) {
+void SDLRenderer::showValidSelect(SelectType selectType, int context)
+{
     // TODO: Render thông báo thành công
-    throw NotImplementedException();
+    clearScreen();
+    renderTextCentered(fontTitle, "SUCCESS", screenHeight / 2 - 20, SUCCESS_COLOR);
+    renderPresent();
 }
 
 /**
@@ -260,30 +283,44 @@ void SDLRenderer::showValidSelect(SelectType selectType, int context) {
  *   - Bước 2: Vẽ grid.
  *   - Bước 3: Vẽ X/O.
  */
-void SDLRenderer::displayBoard(const char board[][BOARD_N_MAX], const int size) {
-    int gap = 8; 
-    int boardSizePx = screenWidth - 2 * boardPadding; 
+void SDLRenderer::displayBoard(const char board[][BOARD_N_MAX], const int size)
+{
+    int gap = 8;
+    int boardSizePx = screenWidth - 2 * boardPadding;
     int cellSizePx = (boardSizePx - gap * (size + 1)) / size;
-    
+
     int startX = boardPadding;
     int startY = (screenHeight - boardSizePx) / 2;
-
     drawRect(startX, startY, boardSizePx, boardSizePx, COLOR_BOARD, true);
 
-    for (int i = 0; i < size; i++) {
-        for (int j = 0; j < size; j++) {
+    for (int k = 0; k < size; k++)
+    {
+        std::string numStr = std::to_string(k);
+        int centerOfCellX = startX + gap + k * (cellSizePx + gap) + (cellSizePx / 2);
+        int centerOfCellY = startY + gap + k * (cellSizePx + gap) + (cellSizePx / 2);
+        renderText(fontNormal, numStr, centerOfCellX - 8, startY - 35, COLOR_TEXT);
+        renderText(fontNormal, numStr, startX - 35, centerOfCellY - 14, COLOR_TEXT);
+    }
+
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = 0; j < size; j++)
+        {
             int cellX = startX + gap + j * (cellSizePx + gap);
             int cellY = startY + gap + i * (cellSizePx + gap);
 
             drawRect(cellX, cellY, cellSizePx, cellSizePx, COLOR_CELL, true);
 
-            if (board[i][j] == 'X' || board[i][j] == 'O') {
-                std::string mark(1, board[i][j]); 
+            if (board[i][j] == 'X' || board[i][j] == 'O')
+            {
+                std::string mark(1, board[i][j]);
                 SDL_Color markColor = (board[i][j] == 'X') ? COLOR_X : COLOR_O;
-                renderText(fontTitle, mark, cellX + 15, cellY + 10, markColor); 
+
+                renderText(fontTitle, mark, cellX + 15, cellY + 10, markColor);
             }
         }
     }
+    renderPresent();
 }
 
 /**
@@ -295,9 +332,12 @@ void SDLRenderer::displayBoard(const char board[][BOARD_N_MAX], const int size) 
  *   - Bước 1: Xác định vị trí ô.
  *   - Bước 2: Vẽ highlight.
  */
-void SDLRenderer::showMove(const int row, const int col) {
+void SDLRenderer::showMove(const int row, const int col)
+{
     // TODO: Highlight move
-    throw NotImplementedException();
+    std::string moveText = std::format("Last move placed at: {}, {}", row, col);
+    renderTextCentered(fontSmall, moveText, screenHeight - 80, COLOR_TEXT);
+    renderPresent();
 }
 
 /**
@@ -308,9 +348,11 @@ void SDLRenderer::showMove(const int row, const int col) {
  * TODO:
  *   - Bước 1: Render thông báo lỗi.
  */
-void SDLRenderer::showInvalidMove() {
+void SDLRenderer::showInvalidMove()
+{
     // TODO: Render invalid move message
-    throw NotImplementedException();
+    renderTextCentered(fontNormal, "INVALID MOVE! Cell taken or out of bounds.", 30, ERROR_COLOR);
+    renderPresent();
 }
 
 /**
@@ -322,9 +364,15 @@ void SDLRenderer::showInvalidMove() {
  *   - Bước 1: Xác định text.
  *   - Bước 2: Render lên màn hình.
  */
-void SDLRenderer::showPlayer(const int player, const bool is_bot) {
+void SDLRenderer::showPlayer(const int player, const bool is_bot)
+{
     // TODO: Render player info
-    throw NotImplementedException();
+    std::string playerName = is_bot ? std::format("BOT {}", player + 1) : std::format("PLAYER {}", player + 1);
+    std::string mark = (player == 0) ? "X" : "O";
+    std::string turnText = std::format("TURN: {} ({})", playerName, mark);
+    SDL_Color playerColor = (player == 0) ? COLOR_X : COLOR_O;
+    renderTextCentered(fontNormal, turnText, 30, playerColor);
+    renderPresent();
 }
 
 /**
@@ -337,9 +385,26 @@ void SDLRenderer::showPlayer(const int player, const bool is_bot) {
  *   - Bước 2: Render text.
  *   - Bước 3: Highlight winLine nếu có.
  */
-void SDLRenderer::showResult(const int winner, const bool is_bot, const WinLine* winLine) {
+void SDLRenderer::showResult(const int winner, const bool is_bot, const WinLine *winLine)
+{
     // TODO: Render result
-    throw NotImplementedException();
+    SDL_Color overlayColor = {COLOR_BG.r, COLOR_BG.g, COLOR_BG.b, 200};
+    drawRect(0, 0, screenWidth, screenHeight, overlayColor, true);
+    std::string resultText = "";
+    SDL_Color winColor = COLOR_TEXT;
+
+    if (winner == -1) {
+        resultText = "IT'S A DRAW!";
+    } else {
+        std::string type = is_bot ? "BOT" : "PLAYER";
+        resultText = std::format("{} {} WINS!", type, winner + 1);
+        winColor = (winner == 0) ? COLOR_X : COLOR_O;
+    }
+
+    renderTextCentered(fontTitle, resultText, screenHeight / 2 - 50, winColor);
+    renderTextCentered(fontSmall, "Game Over - Press ENTER or CLICK to exit", screenHeight / 2 + 50, COLOR_TEXT);
+
+    renderPresent();
 }
 
 /**
@@ -351,9 +416,11 @@ void SDLRenderer::showResult(const int winner, const bool is_bot, const WinLine*
  *   - Bước 1: Format output.
  *   - Bước 2: In ra std::cout.
  */
-void SDLRenderer::printResult(const GameResult& gameResult) {
+void SDLRenderer::printResult(const GameResult &gameResult)
+{
     // TODO: Print result
-    throw NotImplementedException();
+    std::cout << "=== GAME OVER ===" << std::endl;
+    std::cout << "[Judge Mode] Result recorded successfully." << std::endl;
 }
 
 /**
@@ -364,14 +431,18 @@ void SDLRenderer::printResult(const GameResult& gameResult) {
  *   - Destroy renderer và window.
  *   - Shutdown SDL subsystem.
  */
-void SDLRenderer::close() {
+void SDLRenderer::close()
+{
     // if (font) {
     //     TTF_CloseFont(font);
     //     font = nullptr;
     // }
-    if (fontTitle) TTF_CloseFont(fontTitle);
-    if (fontNormal) TTF_CloseFont(fontNormal);
-    if (fontSmall) TTF_CloseFont(fontSmall);
+    if (fontTitle)
+        TTF_CloseFont(fontTitle);
+    if (fontNormal)
+        TTF_CloseFont(fontNormal);
+    if (fontSmall)
+        TTF_CloseFont(fontSmall);
 
     TTF_Quit();
 

@@ -43,6 +43,10 @@ class SDLRenderer : public I_Renderer {
     const SDL_Color COLOR_X        = {242, 177, 121, 255};
     const SDL_Color COLOR_O        = {114, 203, 224, 255};
     const SDL_Color COLOR_BTN_HOVER= {143, 122, 102, 255};
+    const SDL_Color SUCCESS_COLOR  = {114, 203, 224, 255};
+    const SDL_Color ERROR_COLOR    = {235, 113, 106, 255};
+    const SDL_Color BTN_COLOR      = {143, 122, 102, 255};
+    const SDL_Color BTN_TEXT_COLOR = {255, 255, 255, 255};
 
     /**
      * Mô tả: Đẩy nội dung đã vẽ lên màn hình (swap buffer).
