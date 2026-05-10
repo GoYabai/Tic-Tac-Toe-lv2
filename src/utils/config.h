@@ -48,9 +48,9 @@ struct RunConfig {
 
     // ---------- SDL Layout ----------
 
-    int screenWidth = 800;   // chiều rộng cửa sổ SDL
-    int screenHeight = 800;  // chiều cao cửa sổ SDL
-    int boardPadding = 100;  // khoảng cách padding của board trong màn hình
+    int screenWidth = 1280;   // chiều rộng cửa sổ SDL
+    int screenHeight = 720;  // chiều cao cửa sổ SDL
+    int boardPadding = 60;  // khoảng cách padding của board trong màn hình
 
     // ---------- Helper ----------
 

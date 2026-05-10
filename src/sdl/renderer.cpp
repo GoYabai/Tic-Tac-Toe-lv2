@@ -117,7 +117,17 @@ void SDLRenderer::drawButton(const std::string &text, int y)
     int h = 60;
     int x = (screenWidth - w) / 2;
 
-    drawRect(x, y, w, h, BTN_COLOR, true);
+    // 1. Lấy tọa độ chuột hiện tại tức thì từ SDL
+    int mx, my;
+    SDL_GetMouseState(&mx, &my);
+
+    // 2. Kiểm tra xem mũi tên chuột có lọt vào ranh giới nút không
+    bool isHovered = (mx >= x && mx <= x + w && my >= y && my <= y + h);
+
+    // 3. Nếu chuột đang trỏ vào -> Xài màu HOVER sáng, ngược lại xài màu GỐC
+    SDL_Color currentColor = isHovered ? COLOR_BTN_HOVER : BTN_COLOR;
+
+    drawRect(x, y, w, h, currentColor, true);
     renderTextCentered(fontNormal, text, y + 15, BTN_TEXT_COLOR);
 }
 
@@ -126,7 +136,7 @@ void SDLRenderer::renderText(TTF_Font *targetFont, const std::string &text, int 
     if (!targetFont)
         return;
 
-    SDL_Surface *surface = TTF_RenderText_Solid(targetFont, text.c_str(), color);
+    SDL_Surface *surface = TTF_RenderText_Blended(targetFont, text.c_str(), color);
     SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
 
     SDL_Rect rect = {x, y, surface->w, surface->h};
@@ -141,7 +151,7 @@ void SDLRenderer::renderTextCentered(TTF_Font *targetFont, const std::string &te
     if (!targetFont)
         return;
 
-    SDL_Surface *surface = TTF_RenderText_Solid(targetFont, text.c_str(), color);
+    SDL_Surface *surface = TTF_RenderText_Blended(targetFont, text.c_str(), color);
     SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
 
     int x = (screenWidth - surface->w) / 2;
@@ -174,7 +184,7 @@ void SDLRenderer::showSelectMenu(SelectType selectType, int context)
     switch (selectType)
     {
     case SelectType::TITLE_UI:
-        titleText = "TIC-TAC-TOE / CARO";
+        titleText = "TIC-TAC-TOE";
         buttons = {"START GAME"};
         break;
 
@@ -352,11 +362,11 @@ void SDLRenderer::showValidSelect(SelectType selectType, int context)
 void SDLRenderer::displayBoard(const char board[][BOARD_N_MAX], const int size)
 {
     int gap = 8;
-    int boardSizePx = screenWidth - 2 * boardPadding;
+    int boardSizePx = screenHeight - 2 * boardPadding;
     int cellSizePx = (boardSizePx - gap * (size + 1)) / size;
 
-    int startX = boardPadding;
-    int startY = (screenHeight - boardSizePx) / 2;
+    int startX = (screenWidth - boardSizePx) / 2;
+    int startY = boardPadding;
     drawRect(startX, startY, boardSizePx, boardSizePx, COLOR_BOARD, true);
 
     for (int k = 0; k < size; k++)

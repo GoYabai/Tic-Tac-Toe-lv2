@@ -44,6 +44,8 @@ class SDLInteraction : public I_Interaction {
 
     int currentBoardSize = 3;
 
+    bool isTitleScreen = true;
+
    public:
     /**
      * Mô tả: Constructor khởi tạo SDLInteraction.

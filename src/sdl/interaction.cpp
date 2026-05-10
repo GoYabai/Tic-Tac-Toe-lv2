@@ -86,7 +86,6 @@ void SDLInteraction::init(const RunConfig &config)
  */
 void SDLInteraction::pause(int timeout)
 {
-    // Nếu có timeout cụ thể -> delay trực tiếp bằng SDL
     if (timeout > 0)
     {
         SDL_Delay(timeout);
@@ -96,26 +95,72 @@ void SDLInteraction::pause(int timeout)
     bool waiting = true;
     SDL_Event event;
 
-    // Vòng lặp chờ sự kiện từ người dùng
+    int btnW = 400;
+    int btnH = 60;
+    int btnX = (screenWidth - btnW) / 2;
+    int btnY = 280;
+
+    // Biến theo dõi: Nhớ trạng thái trước đó để chỉ kêu "tạch" 1 lần khi vừa lướt vào nút
+    bool wasHovered = false;
+
     while (waiting)
     {
-        // SDL_WaitEvent sẽ block cho tới khi có event
+        // 🌟 LIÊN TỤC VẼ LẠI TITLE SCREEN KHI CÓ SỰ KIỆN ĐỂ CẬP NHẬT MÀU HOVER
+        if (isTitleScreen && this->renderer)
+        {
+            this->renderer->showSelectMenu(SelectType::TITLE_UI);
+        }
+
         if (SDL_WaitEvent(&event))
         {
-            // Nếu người dùng đóng cửa sổ -> thoát game
-            if (waitForQuit(event))
+            if (waitForQuit(event)) {}
+
+            // =================================================================
+            // 🚀 MỞ RỘNG TƯƠNG LAI: BẮT TÍN HIỆU ÂM THANH "TẠCH TẠCH"
+            // =================================================================
+            if (event.type == SDL_MOUSEMOTION && isTitleScreen) 
             {
+                int mx = event.motion.x;
+                int my = event.motion.y;
+                bool isCurrentlyHovered = (mx >= btnX && mx <= btnX + btnW && my >= btnY && my <= btnY + btnH);
+                
+                // Nếu chuột VỪA BƯỚC VÀO nút (trước đó ở ngoài, giờ ở trong)
+                if (isCurrentlyHovered && !wasHovered) {
+                    // TODO (Khi tích hợp SDL_mixer): 
+                    // Mix_PlayChannel(-1, soundHover, 0); 
+                    std::cout << "[SFX] *Tach tach*" << std::endl; // In tạm ra console cho vui tai
+                }
+                wasHovered = isCurrentlyHovered;
             }
 
-            // tương tự
-            // if (event.type == SDL_QUIT) {
-            //     throw QuitException();
-            // }
-
-            // Nếu có tương tác (nhấn phím hoặc click chuột) -> kết thúc pause
-            if (event.type == SDL_KEYDOWN || event.type == SDL_MOUSEBUTTONDOWN)
+            // A. XỬ LÝ ENTER
+            if (event.type == SDL_KEYDOWN)
             {
-                waiting = false;
+                SDL_Keycode key = event.key.keysym.sym;
+                if (key == SDLK_RETURN || key == SDLK_KP_ENTER)
+                {
+                    waiting = false;
+                    isTitleScreen = false;
+                }
+            }
+            // B. XỬ LÝ CLICK CHUỘT
+            else if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT)
+            {
+                int mx = event.button.x;
+                int my = event.button.y;
+
+                if (isTitleScreen)
+                {
+                    if (mx >= btnX && mx <= btnX + btnW && my >= btnY && my <= btnY + btnH)
+                    {
+                        waiting = false;
+                        isTitleScreen = false;
+                    }
+                }
+                else
+                {
+                    waiting = false;
+                }
             }
         }
     }
@@ -514,10 +559,10 @@ bool SDLInteraction::getPlayerMove(int* row, int* col) {
     // 2. TÁI HIỆN CHÍNH XÁC CÔNG THỨC TOÁN HỌC UI CỦA HỌA SĨ
     // Các thông số này phải khớp 100% với hàm displayBoard trong renderer.cpp
     int gap = 8;
-    int boardSizePx = screenWidth - 2 * boardPadding;
+    int boardSizePx = screenHeight - 2 * boardPadding;
     int cellSizePx = (boardSizePx - gap * (size + 1)) / size;
-    int startX = boardPadding;
-    int startY = (screenHeight - boardSizePx) / 2;
+    int startX = (screenWidth - boardSizePx) / 2;
+    int startY = boardPadding;
 
     // Dọn sạch các event click/phím rác trước khi vào lượt
     SDL_FlushEvents(SDL_FIRSTEVENT, SDL_LASTEVENT);
