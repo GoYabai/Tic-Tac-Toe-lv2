@@ -36,17 +36,19 @@ class SDLRenderer : public I_Renderer {
     int screenHeight;
     int boardPadding;
 
-    const SDL_Color COLOR_BG       = {250, 248, 239, 255};
-    const SDL_Color COLOR_BOARD    = {187, 173, 160, 255};
-    const SDL_Color COLOR_CELL     = {205, 193, 180, 255};
-    const SDL_Color COLOR_TEXT     = {119, 110, 101, 255};
-    const SDL_Color COLOR_X        = {242, 177, 121, 255};
-    const SDL_Color COLOR_O        = {114, 203, 224, 255};
-    const SDL_Color COLOR_BTN_HOVER= {173, 152, 132, 255};
-    const SDL_Color SUCCESS_COLOR  = {114, 203, 224, 255};
-    const SDL_Color ERROR_COLOR    = {235, 113, 106, 255};
-    const SDL_Color BTN_COLOR      = {143, 122, 102, 255};
-    const SDL_Color BTN_TEXT_COLOR = {255, 255, 255, 255};
+    const SDL_Color COLOR_BG            = {250, 248, 239, 255};
+    const SDL_Color COLOR_BOARD         = {187, 173, 160, 255};
+    const SDL_Color COLOR_CELL          = {205, 193, 180, 255};
+    const SDL_Color COLOR_TEXT          = {119, 110, 101, 255};
+    const SDL_Color COLOR_X             = {242, 177, 121, 255};
+    const SDL_Color COLOR_O             = {114, 203, 224, 255};
+    const SDL_Color COLOR_BTN_HOVER     = {173, 152, 132, 255};
+    const SDL_Color ERROR_COLOR_HOVER   = {255, 143, 136, 255};
+    const SDL_Color SUCCESS_COLOR_HOVER = {144, 223, 244, 255};
+    const SDL_Color SUCCESS_COLOR       = {114, 203, 224, 255};
+    const SDL_Color ERROR_COLOR         = {235, 113, 106, 255};
+    const SDL_Color BTN_COLOR           = {143, 122, 102, 255};
+    const SDL_Color BTN_TEXT_COLOR      = {255, 255, 255, 255};
 
     /**
      * Mô tả: Đẩy nội dung đã vẽ lên màn hình (swap buffer).

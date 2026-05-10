@@ -181,6 +181,9 @@ void SDLRenderer::showSelectMenu(SelectType selectType, int context)
     std::string promptText = "";
     std::vector<std::string> buttons;
 
+    int mx, my;
+    SDL_GetMouseState(&mx, &my);
+
     switch (selectType)
     {
     case SelectType::TITLE_UI:
@@ -200,16 +203,12 @@ void SDLRenderer::showSelectMenu(SelectType selectType, int context)
 
     case SelectType::SIZE_UI:
     {
-        titleText = "BOARD SIZE CONFIG";
-        promptText = "Select (3-12) or Type:";
-
-        renderTextCentered(fontTitle, titleText, 100, COLOR_TEXT);
-        renderTextCentered(fontNormal, promptText, 170, COLOR_TEXT);
+        renderTextCentered(fontTitle, "BOARD SIZE CONFIG", 100, COLOR_TEXT);
+        renderTextCentered(fontNormal, "Select (3-12) or Type:", 170, COLOR_TEXT);
 
         int btnW = 70, btnH = 60, gap = 15;
         int startX = (screenWidth - (5 * btnW + 4 * gap)) / 2;
 
-        // 1. Vẽ Lưới nút từ 3 -> 12 (2 hàng, mỗi hàng 5 nút)
         for (int i = 0; i < 10; i++)
         {
             int val = i + 3;
@@ -218,61 +217,81 @@ void SDLRenderer::showSelectMenu(SelectType selectType, int context)
             int x = startX + col * (btnW + gap);
             int y = 230 + row * (btnH + gap);
 
-            drawRect(x, y, btnW, btnH, BTN_COLOR, true);
-            renderTextCentered(fontNormal, std::to_string(val), y + 15, BTN_TEXT_COLOR);
+            // 🌟 2. LOGIC HOVER CHO NÚT SỐ
+            bool isThisBtnHovered = (mx >= x && mx <= x + btnW && my >= y && my <= y + btnH);
+            SDL_Color currentNumBtnColor = isThisBtnHovered ? COLOR_BTN_HOVER : BTN_COLOR;
+
+            drawRect(x, y, btnW, btnH, currentNumBtnColor, true);
+
+            int offsetX = (val < 10) ? 27 : 20; 
+            renderText(fontNormal, std::to_string(val), x + offsetX, y + 15, BTN_TEXT_COLOR);
         }
 
         int bottomY = 400;
         drawRect(startX, bottomY, 200, 60, COLOR_CELL, true);
         renderText(fontNormal, std::to_string(context), startX + 20, bottomY + 15, COLOR_TEXT);
 
-        drawRect(startX + 215, bottomY, 80, 60, ERROR_COLOR, true);
+        // 🌟 3. LOGIC HOVER CHO NÚT DEL
+        bool isDelHovered = (mx >= startX + 215 && mx <= startX + 215 + 80 && my >= bottomY && my <= bottomY + 60);
+        SDL_Color currentDelColor = isDelHovered ? ERROR_COLOR_HOVER : ERROR_COLOR;
+        drawRect(startX + 215, bottomY, 80, 60, currentDelColor, true);
         renderText(fontNormal, "DEL", startX + 225, bottomY + 15, BTN_TEXT_COLOR);
 
-        drawRect(startX + 310, bottomY, 100, 60, SUCCESS_COLOR, true);
+        // 🌟 4. LOGIC HOVER CHO NÚT OK
+        bool isOkHovered = (mx >= startX + 310 && mx <= startX + 310 + 100 && my >= bottomY && my <= bottomY + 60);
+        SDL_Color currentOkColor = isOkHovered ? SUCCESS_COLOR_HOVER : SUCCESS_COLOR;
+        drawRect(startX + 310, bottomY, 100, 60, currentOkColor, true);
         renderText(fontNormal, "OK", startX + 335, bottomY + 15, BTN_TEXT_COLOR);
         break;
     }
 
-    case SelectType::GOAL_UI: {
-            // Giải nén bit: Lấy 16 bit đầu làm maxSize, 16 bit sau làm số đang hiển thị
-            int maxSize = (context >> 16) & 0xFFFF;
-            int currentVal = context & 0xFFFF;
+    case SelectType::GOAL_UI: 
+    {
+        int maxSize = (context >> 16) & 0xFFFF;
+        int currentVal = context & 0xFFFF;
 
-            titleText = "WINNING GOAL CONFIG";
-            promptText = std::format("Select (3-{}) or Type:", maxSize);
+        renderTextCentered(fontTitle, "WINNING GOAL CONFIG", 100, COLOR_TEXT);
+        std::string customPrompt = std::format("Select (3-{}) or Type:", maxSize);
+        renderTextCentered(fontNormal, customPrompt, 170, COLOR_TEXT);
 
-            renderTextCentered(fontTitle, titleText, 100, COLOR_TEXT);
-            renderTextCentered(fontNormal, promptText, 170, COLOR_TEXT);
+        int btnW = 70, btnH = 60, gap = 15;
+        int startX = (screenWidth - (5 * btnW + 4 * gap)) / 2;
 
-            int btnW = 70, btnH = 60, gap = 15;
-            int startX = (screenWidth - (5 * btnW + 4 * gap)) / 2;
+        int maxButtons = maxSize - 3 + 1;
+        for (int i = 0; i < maxButtons; i++) 
+        {
+            int val = i + 3;
+            int row = i / 5;
+            int col = i % 5;
+            int x = startX + col * (btnW + gap);
+            int y = 230 + row * (btnH + gap);
 
-            // 1. ĐIỂM SÁNG UX: Chỉ vẽ ra các nút bấm hợp lệ từ 3 đến maxSize
-            int maxButtons = maxSize - 3 + 1;
-            for (int i = 0; i < maxButtons; i++) {
-                int val = i + 3;
-                int row = i / 5;
-                int col = i % 5;
-                int x = startX + col * (btnW + gap);
-                int y = 230 + row * (btnH + gap);
+            // 🌟 2. LOGIC HOVER CHO NÚT SỐ (GOAL_UI)
+            bool isThisBtnHovered = (mx >= x && mx <= x + btnW && my >= y && my <= y + btnH);
+            SDL_Color currentNumBtnColor = isThisBtnHovered ? COLOR_BTN_HOVER : BTN_COLOR;
+            drawRect(x, y, btnW, btnH, currentNumBtnColor, true);
 
-                drawRect(x, y, btnW, btnH, BTN_COLOR, true);
-                renderTextCentered(fontNormal, std::to_string(val), y + 15, BTN_TEXT_COLOR);
-            }
-
-            // 2. Vẽ Khung hiển thị & Các nút điều khiển DEL, OK
-            int bottomY = 400;
-            drawRect(startX, bottomY, 200, 60, COLOR_CELL, true);
-            renderText(fontNormal, std::to_string(currentVal), startX + 20, bottomY + 15, COLOR_TEXT);
-
-            drawRect(startX + 215, bottomY, 80, 60, ERROR_COLOR, true);
-            renderText(fontNormal, "DEL", startX + 225, bottomY + 15, BTN_TEXT_COLOR);
-
-            drawRect(startX + 310, bottomY, 100, 60, SUCCESS_COLOR, true);
-            renderText(fontNormal, "OK", startX + 335, bottomY + 15, BTN_TEXT_COLOR);
-            break;
+            int offsetX = (val < 10) ? 27 : 20;
+            renderText(fontNormal, std::to_string(val), x + offsetX, y + 15, BTN_TEXT_COLOR);
         }
+
+        int bottomY = 400;
+        drawRect(startX, bottomY, 200, 60, COLOR_CELL, true);
+        renderText(fontNormal, std::to_string(currentVal), startX + 20, bottomY + 15, COLOR_TEXT);
+
+        // 🌟 3. LOGIC HOVER CHO NÚT DEL (GOAL_UI)
+        bool isDelHovered = (mx >= startX + 215 && mx <= startX + 215 + 80 && my >= bottomY && my <= bottomY + 60);
+        SDL_Color currentDelColor = isDelHovered ? ERROR_COLOR_HOVER : ERROR_COLOR;
+        drawRect(startX + 215, bottomY, 80, 60, currentDelColor, true);
+        renderText(fontNormal, "DEL", startX + 225, bottomY + 15, BTN_TEXT_COLOR);
+
+        // 🌟 4. LOGIC HOVER CHO NÚT OK (GOAL_UI)
+        bool isOkHovered = (mx >= startX + 310 && mx <= startX + 310 + 100 && my >= bottomY && my <= bottomY + 60);
+        SDL_Color currentOkColor = isOkHovered ? SUCCESS_COLOR_HOVER : SUCCESS_COLOR;
+        drawRect(startX + 310, bottomY, 100, 60, currentOkColor, true);
+        renderText(fontNormal, "OK", startX + 335, bottomY + 15, BTN_TEXT_COLOR);
+        break;
+    }
 
     case SelectType::PLAYER_UI:
         titleText = "YOUR TURN";
