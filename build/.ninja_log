@@ -9,13 +9,12 @@
 25	972	8001219673748658	CMakeFiles/game.dir/src/utils/config.cpp.obj	27d523f26435b788
 147	3885	7998465666197595	CMakeFiles/game.dir/src/game/logic.cpp.obj	7c536862494cb1d5
 31	1148	8001219673793893	CMakeFiles/game.dir/src/utils/logger.cpp.obj	6631dab11da2748b
-25	2735	8001344337379084	CMakeFiles/game.dir/src/main.cpp.obj	d2f6ab7dce6f1838
+20	1046	8001350487739896	CMakeFiles/game.dir/src/main.cpp.obj	d2f6ab7dce6f1838
 30	3140	8001344337445838	CMakeFiles/game.dir/src/sdl/interaction.cpp.obj	783850b53d1e4481
-34	6182	8001344337510207	CMakeFiles/game.dir/src/sdl/renderer.cpp.obj	67a47cbf854acba2
+24	2833	8001350487829753	CMakeFiles/game.dir/src/sdl/renderer.cpp.obj	67a47cbf854acba2
 21	4711	8001219673688645	CMakeFiles/game.dir/src/terminal/renderer.cpp.obj	9cd6491f54ee18c1
 18	5098	8001219673658453	CMakeFiles/game.dir/src/terminal/interaction.cpp.obj	929dc261ec2310f
 5	5219	8001219673521269	CMakeFiles/game.dir/src/game/engine.cpp.obj	48e362ee87a80e13
-6183	6937	8001344398998104	game.exe	4e818336165960a3
-20	1046	8001350487739896	CMakeFiles/game.dir/src/main.cpp.obj	d2f6ab7dce6f1838
-24	2833	8001350487829753	CMakeFiles/game.dir/src/sdl/renderer.cpp.obj	67a47cbf854acba2
 2834	3012	8001350515930416	game.exe	4e818336165960a3
+69	6665	8001649224371885	CMakeFiles/game.dir/src/sdl/renderer.cpp.obj	67a47cbf854acba2
+6668	7162	8001649290346672	game.exe	4e818336165960a3

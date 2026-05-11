@@ -34,9 +34,9 @@ SDLRenderer::~SDLRenderer()
  * Đầu vào: config - cấu hình màn hình và layout.
  * Đầu ra: Không.
  * Tác dụng phụ:
- *   - Khởi tạo SDL subsystem.
- *   - Tạo window và renderer.
- *   - Thiết lập chế độ blend.
+ * - Khởi tạo SDL subsystem.
+ * - Tạo window và renderer.
+ * - Thiết lập chế độ blend.
  * NOTE: Phải gọi trước khi render.
  */
 void SDLRenderer::init(const RunConfig &config)
@@ -93,10 +93,10 @@ void SDLRenderer::renderPresent()
 /**
  * Mô tả: Vẽ hình chữ nhật lên renderer.
  * Đầu vào:
- *   - x, y: tọa độ.
- *   - w, h: kích thước.
- *   - color: màu sắc.
- *   - filled: true nếu fill, false nếu vẽ viền.
+ * - x, y: tọa độ.
+ * - w, h: kích thước.
+ * - color: màu sắc.
+ * - filled: true nếu fill, false nếu vẽ viền.
  * Đầu ra: Không.
  * Tác dụng phụ: Vẽ trực tiếp lên renderer.
  */
@@ -117,14 +117,10 @@ void SDLRenderer::drawButton(const std::string &text, int y)
     int h = 60;
     int x = (screenWidth - w) / 2;
 
-    // 1. Lấy tọa độ chuột hiện tại tức thì từ SDL
     int mx, my;
     SDL_GetMouseState(&mx, &my);
 
-    // 2. Kiểm tra xem mũi tên chuột có lọt vào ranh giới nút không
     bool isHovered = (mx >= x && mx <= x + w && my >= y && my <= y + h);
-
-    // 3. Nếu chuột đang trỏ vào -> Xài màu HOVER sáng, ngược lại xài màu GỐC
     SDL_Color currentColor = isHovered ? COLOR_BTN_HOVER : BTN_COLOR;
 
     drawRect(x, y, w, h, currentColor, true);
@@ -169,9 +165,9 @@ void SDLRenderer::renderTextCentered(TTF_Font *targetFont, const std::string &te
  * Đầu ra: Không.
  * Tác dụng phụ: Vẽ UI lên màn hình.
  * TODO:
- *   - Bước 1: Xác định loại menu.
- *   - Bước 2: Render text tương ứng.
- *   - Trường hợp biên: selectType không hợp lệ.
+ * - Bước 1: Xác định loại menu.
+ * - Bước 2: Render text tương ứng.
+ * - Trường hợp biên: selectType không hợp lệ.
  */
 void SDLRenderer::showSelectMenu(SelectType selectType, int context)
 {
@@ -221,7 +217,6 @@ void SDLRenderer::showSelectMenu(SelectType selectType, int context)
             int x = startX + col * (btnW + gap);
             int y = 230 + row * (btnH + gap);
 
-            // 🌟 2. LOGIC HOVER CHO NÚT SỐ
             bool isThisBtnHovered = (mx >= x && mx <= x + btnW && my >= y && my <= y + btnH);
             SDL_Color currentNumBtnColor = isThisBtnHovered ? COLOR_BTN_HOVER : BTN_COLOR;
 
@@ -235,13 +230,11 @@ void SDLRenderer::showSelectMenu(SelectType selectType, int context)
         drawRect(startX, bottomY, 200, 60, COLOR_CELL, true);
         renderText(fontNormal, std::to_string(context), startX + 20, bottomY + 15, COLOR_TEXT);
 
-        // 🌟 3. LOGIC HOVER CHO NÚT DEL
         bool isDelHovered = (mx >= startX + 215 && mx <= startX + 215 + 80 && my >= bottomY && my <= bottomY + 60);
         SDL_Color currentDelColor = isDelHovered ? ERROR_COLOR_HOVER : ERROR_COLOR;
         drawRect(startX + 215, bottomY, 80, 60, currentDelColor, true);
         renderText(fontNormal, "DEL", startX + 225, bottomY + 15, BTN_TEXT_COLOR);
 
-        // 🌟 4. LOGIC HOVER CHO NÚT OK
         bool isOkHovered = (mx >= startX + 310 && mx <= startX + 310 + 100 && my >= bottomY && my <= bottomY + 60);
         SDL_Color currentOkColor = isOkHovered ? SUCCESS_COLOR_HOVER : SUCCESS_COLOR;
         drawRect(startX + 310, bottomY, 100, 60, currentOkColor, true);
@@ -270,7 +263,6 @@ void SDLRenderer::showSelectMenu(SelectType selectType, int context)
             int x = startX + col * (btnW + gap);
             int y = 230 + row * (btnH + gap);
 
-            // 🌟 2. LOGIC HOVER CHO NÚT SỐ (GOAL_UI)
             bool isThisBtnHovered = (mx >= x && mx <= x + btnW && my >= y && my <= y + btnH);
             SDL_Color currentNumBtnColor = isThisBtnHovered ? COLOR_BTN_HOVER : BTN_COLOR;
             drawRect(x, y, btnW, btnH, currentNumBtnColor, true);
@@ -283,13 +275,11 @@ void SDLRenderer::showSelectMenu(SelectType selectType, int context)
         drawRect(startX, bottomY, 200, 60, COLOR_CELL, true);
         renderText(fontNormal, std::to_string(currentVal), startX + 20, bottomY + 15, COLOR_TEXT);
 
-        // 🌟 3. LOGIC HOVER CHO NÚT DEL (GOAL_UI)
         bool isDelHovered = (mx >= startX + 215 && mx <= startX + 215 + 80 && my >= bottomY && my <= bottomY + 60);
         SDL_Color currentDelColor = isDelHovered ? ERROR_COLOR_HOVER : ERROR_COLOR;
         drawRect(startX + 215, bottomY, 80, 60, currentDelColor, true);
         renderText(fontNormal, "DEL", startX + 225, bottomY + 15, BTN_TEXT_COLOR);
 
-        // 🌟 4. LOGIC HOVER CHO NÚT OK (GOAL_UI)
         bool isOkHovered = (mx >= startX + 310 && mx <= startX + 310 + 100 && my >= bottomY && my <= bottomY + 60);
         SDL_Color currentOkColor = isOkHovered ? SUCCESS_COLOR_HOVER : SUCCESS_COLOR;
         drawRect(startX + 310, bottomY, 100, 60, currentOkColor, true);
@@ -335,18 +325,16 @@ void SDLRenderer::showSelectMenu(SelectType selectType, int context)
  * Đầu ra: Không.
  * Tác dụng phụ: Hiển thị thông báo lỗi.
  * TODO:
- *   - Bước 1: Xác định loại lỗi.
- *   - Bước 2: Render text cảnh báo.
+ * - Bước 1: Xác định loại lỗi.
+ * - Bước 2: Render text cảnh báo.
  */
 void SDLRenderer::showInvalidSelect(SelectType selectType, int context)
 {
     // TODO: Render thông báo lỗi
     clearScreen();
-
     renderTextCentered(fontTitle, "INVALID INPUT", screenHeight / 2 - 50, ERROR_COLOR);
     renderTextCentered(fontNormal, "Please check your selection and try again", screenHeight / 2 + 20, COLOR_TEXT);
     renderTextCentered(fontSmall, "Click or press ENTER to continue", screenHeight - 50, COLOR_TEXT);
-
     renderPresent();
 }
 
@@ -356,8 +344,8 @@ void SDLRenderer::showInvalidSelect(SelectType selectType, int context)
  * Đầu ra: Không.
  * Tác dụng phụ: Hiển thị xác nhận.
  * TODO:
- *   - Bước 1: Xác định loại selection.
- *   - Bước 2: Render thông báo thành công.
+ * - Bước 1: Xác định loại selection.
+ * - Bước 2: Render thông báo thành công.
  */
 void SDLRenderer::showValidSelect(SelectType selectType, int context)
 {
@@ -373,9 +361,9 @@ void SDLRenderer::showValidSelect(SelectType selectType, int context)
  * Đầu ra: Không.
  * Tác dụng phụ: Render grid và ký hiệu.
  * TODO:
- *   - Bước 1: Tính toán layout ô.
- *   - Bước 2: Vẽ grid.
- *   - Bước 3: Vẽ X/O.
+ * - Bước 1: Tính toán layout ô.
+ * - Bước 2: Vẽ grid.
+ * - Bước 3: Vẽ X/O.
  */
 void SDLRenderer::displayBoard(const char board[][BOARD_N_MAX], const int size)
 {
@@ -397,7 +385,7 @@ void SDLRenderer::displayBoard(const char board[][BOARD_N_MAX], const int size)
         renderText(fontNormal, numStr, startX - 35, centerOfCellY - 14, COLOR_TEXT);
     }
 
-    // Vòng lặp vẽ ô cờ thuần túy, sạch sẽ
+    // Vòng lặp vẽ ô cờ tĩnh và highlight
     for (int i = 0; i < size; i++)
     {
         for (int j = 0; j < size; j++)
@@ -407,6 +395,13 @@ void SDLRenderer::displayBoard(const char board[][BOARD_N_MAX], const int size)
 
             // Vẽ nền ô cờ tĩnh
             drawRect(cellX, cellY, cellSizePx, cellSizePx, COLOR_CELL, true);
+
+            // 🌟 HIGHLIGHT VIỀN KÉP CHO Ô VỪA ĐÁNH (GIỐNG HỆT TRONG ẢNH)
+            if (lastRow != -1 && lastCol != -1 && i == lastRow && j == lastCol)
+            {
+                drawRect(cellX, cellY, cellSizePx, cellSizePx, SUCCESS_COLOR, false);
+                drawRect(cellX + 1, cellY + 1, cellSizePx - 2, cellSizePx - 2, SUCCESS_COLOR, false);
+            }
 
             // Vẽ ký hiệu X hoặc O
             if (board[i][j] == 'X' || board[i][j] == 'O')
@@ -418,10 +413,21 @@ void SDLRenderer::displayBoard(const char board[][BOARD_N_MAX], const int size)
         }
     }
 
+    // 🌟 VẼ HỘP "LAST MOVE" SANG TRỌNG Ở ĐÁY MÀN HÌNH
     if (lastRow != -1 && lastCol != -1)
     {
+        int boxW = 360;
+        int boxH = 65;
+        int boxX = (screenWidth - boxW) / 2;
+        int boxY = screenHeight - 85;
+
+        // Nền hộp nâu
+        drawRect(boxX, boxY, boxW, boxH, BTN_COLOR, true);
+
+        // 2 dòng chữ trắng căn giữa hoàn hảo
+        renderTextCentered(fontSmall, "LAST MOVE", boxY + 10, BTN_TEXT_COLOR);
         std::string moveText = std::format("Last move placed at: {}, {}", lastRow, lastCol);
-        renderTextCentered(fontSmall, moveText, screenHeight - 80, COLOR_TEXT);
+        renderTextCentered(fontSmall, moveText, boxY + 35, BTN_TEXT_COLOR);
     }
 
     renderPresent();
@@ -433,16 +439,25 @@ void SDLRenderer::displayBoard(const char board[][BOARD_N_MAX], const int size)
  * Đầu ra: Không.
  * Tác dụng phụ: Highlight ô.
  * TODO:
- *   - Bước 1: Xác định vị trí ô.
- *   - Bước 2: Vẽ highlight.
+ * - Bước 1: Xác định vị trí ô.
+ * - Bước 2: Vẽ highlight.
  */
 void SDLRenderer::showMove(const int row, const int col)
 {
     this->lastRow = row;
     this->lastCol = col;
     
+    int boxW = 360;
+    int boxH = 65;
+    int boxX = (screenWidth - boxW) / 2;
+    int boxY = screenHeight - 85;
+
+    drawRect(boxX, boxY, boxW, boxH, BTN_COLOR, true);
+
+    renderTextCentered(fontSmall, "LAST MOVE", boxY + 10, BTN_TEXT_COLOR);
     std::string moveText = std::format("Last move placed at: {}, {}", row, col);
-    renderTextCentered(fontSmall, moveText, screenHeight - 80, COLOR_TEXT);
+    renderTextCentered(fontSmall, moveText, boxY + 35, BTN_TEXT_COLOR);
+
     renderPresent();
 }
 
@@ -452,11 +467,13 @@ void SDLRenderer::showMove(const int row, const int col)
  * Đầu ra: Không.
  * Tác dụng phụ: Hiển thị lỗi.
  * TODO:
- *   - Bước 1: Render thông báo lỗi.
+ * - Bước 1: Render thông báo lỗi.
  */
 void SDLRenderer::showInvalidMove()
 {
-    renderTextCentered(fontNormal, "INVALID MOVE! Cell taken or out of bounds.", screenHeight - 50, ERROR_COLOR);
+    // Đặt ở x = 40, y = 180 (Khu vực lề trái hoàn toàn trống trải)
+    renderText(fontNormal, "INVALID MOVE!", 40, 180, ERROR_COLOR);
+    renderText(fontSmall, "Cell taken or out of bounds.", 40, 215, ERROR_COLOR);
     renderPresent();
 }
 
@@ -466,17 +483,34 @@ void SDLRenderer::showInvalidMove()
  * Đầu ra: Không.
  * Tác dụng phụ: Hiển thị thông tin turn.
  * TODO:
- *   - Bước 1: Xác định text.
- *   - Bước 2: Render lên màn hình.
+ * - Bước 1: Xác định text.
+ * - Bước 2: Render lên màn hình.
  */
 void SDLRenderer::showPlayer(const int player, const bool is_bot)
 {
     std::string playerName = is_bot ? std::format("BOT {}", player + 1) : std::format("PLAYER {}", player + 1);
     std::string mark = (player == 0) ? "X" : "O";
-    std::string turnText = std::format("TURN: {} ({})", playerName, mark);
-    SDL_Color playerColor = (player == 0) ? COLOR_X : COLOR_O;
+    std::string line1 = "TURN:";
+    std::string line2 = std::format("{} ({})", playerName, mark);
 
-    renderText(fontNormal, turnText, 50, 50, playerColor);
+    // 🌟 KHỐI HỘP TURN Ở LỀ TRÁI
+    int boxX = 40;
+    int boxY = 80;
+    int boxW = 220;
+    int boxH = 80;
+
+    // Vẽ nền hộp nâu
+    drawRect(boxX, boxY, boxW, boxH, BTN_COLOR, true);
+
+    // Tự động tính toán chiều rộng thực tế của chữ để căn giữa chính xác vào lòng hộp
+    int w1 = 0, h1 = 0;
+    TTF_SizeText(fontSmall, line1.c_str(), &w1, &h1);
+    renderText(fontSmall, line1, boxX + (boxW - w1) / 2, boxY + 15, BTN_TEXT_COLOR);
+
+    int w2 = 0, h2 = 0;
+    TTF_SizeText(fontNormal, line2.c_str(), &w2, &h2);
+    renderText(fontNormal, line2, boxX + (boxW - w2) / 2, boxY + 40, BTN_TEXT_COLOR);
+
     renderPresent();
 }
 
@@ -486,9 +520,9 @@ void SDLRenderer::showPlayer(const int player, const bool is_bot)
  * Đầu ra: Không.
  * Tác dụng phụ: Hiển thị kết quả và highlight đường thắng.
  * TODO:
- *   - Bước 1: Kiểm tra draw hoặc win.
- *   - Bước 2: Render text.
- *   - Bước 3: Highlight winLine nếu có.
+ * - Bước 1: Kiểm tra draw hoặc win.
+ * - Bước 2: Render text.
+ * - Bước 3: Highlight winLine nếu có.
  */
 void SDLRenderer::showResult(const int winner, const bool is_bot, const WinLine *winLine)
 {
@@ -521,8 +555,8 @@ void SDLRenderer::showResult(const int winner, const bool is_bot, const WinLine 
  * Đầu ra: Không.
  * Tác dụng phụ: In console.
  * TODO:
- *   - Bước 1: Format output.
- *   - Bước 2: In ra std::cout.
+ * - Bước 1: Format output.
+ * - Bước 2: In ra std::cout.
  */
 void SDLRenderer::printResult(const GameResult &gameResult)
 {
@@ -536,15 +570,11 @@ void SDLRenderer::printResult(const GameResult &gameResult)
  * Đầu vào: Không.
  * Đầu ra: Không.
  * Tác dụng phụ:
- *   - Destroy renderer và window.
- *   - Shutdown SDL subsystem.
+ * - Destroy renderer và window.
+ * - Shutdown SDL subsystem.
  */
 void SDLRenderer::close()
 {
-    // if (font) {
-    //     TTF_CloseFont(font);
-    //     font = nullptr;
-    // }
     if (fontTitle)
         TTF_CloseFont(fontTitle);
     if (fontNormal)
