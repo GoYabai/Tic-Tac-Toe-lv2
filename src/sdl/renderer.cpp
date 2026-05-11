@@ -374,15 +374,22 @@ void SDLRenderer::displayBoard(const char board[][BOARD_N_MAX], const int size)
 
     int startX = (screenWidth - boardSizePx) / 2;
     int startY = boardPadding;
-    drawRect(startX, startY, boardSizePx, boardSizePx, COLOR_BOARD, true);
 
+    // 1. VẼ KHUNG NỀN NÂU BAO BỌC CHỈ MỤC
+    int headerOffset = 45; 
+    drawRect(startX - headerOffset, startY - headerOffset, boardSizePx + headerOffset, boardSizePx + headerOffset, COLOR_BOARD, true);
+
+    // 2. VẼ CÁC CON SỐ CHỈ MỤC (MÀU TRẮNG SÁNG)
     for (int k = 0; k < size; k++)
     {
         std::string numStr = std::to_string(k);
         int centerOfCellX = startX + gap + k * (cellSizePx + gap) + (cellSizePx / 2);
         int centerOfCellY = startY + gap + k * (cellSizePx + gap) + (cellSizePx / 2);
-        renderText(fontNormal, numStr, centerOfCellX - 8, startY - 35, COLOR_TEXT);
-        renderText(fontNormal, numStr, startX - 35, centerOfCellY - 14, COLOR_TEXT);
+        
+        int offsetX = (k < 10) ? 8 : 14;
+        
+        renderText(fontNormal, numStr, centerOfCellX - offsetX, startY - 40, BTN_TEXT_COLOR);
+        renderText(fontNormal, numStr, startX - 40, centerOfCellY - 14, BTN_TEXT_COLOR);
     }
 
     // Vòng lặp vẽ ô cờ tĩnh và highlight
@@ -393,41 +400,55 @@ void SDLRenderer::displayBoard(const char board[][BOARD_N_MAX], const int size)
             int cellX = startX + gap + j * (cellSizePx + gap);
             int cellY = startY + gap + i * (cellSizePx + gap);
 
-            // Vẽ nền ô cờ tĩnh
             drawRect(cellX, cellY, cellSizePx, cellSizePx, COLOR_CELL, true);
 
-            // 🌟 HIGHLIGHT VIỀN KÉP CHO Ô VỪA ĐÁNH (GIỐNG HỆT TRONG ẢNH)
+            // 🌟 ĐÃ SỬA LỖI VIỀN KÌ KÌ: 
+            // Trả lại đúng biến cellSizePx - 2 cho cả chiều rộng lẫn chiều cao của lớp viền trong.
+            // Đảm bảo 2 lớp viền lồng nhau tạo thành khung dày 2px vuông vắn, hoàn hảo tuyệt đối.
             if (lastRow != -1 && lastCol != -1 && i == lastRow && j == lastCol)
             {
                 drawRect(cellX, cellY, cellSizePx, cellSizePx, SUCCESS_COLOR, false);
                 drawRect(cellX + 1, cellY + 1, cellSizePx - 2, cellSizePx - 2, SUCCESS_COLOR, false);
             }
 
-            // Vẽ ký hiệu X hoặc O
             if (board[i][j] == 'X' || board[i][j] == 'O')
             {
                 std::string mark(1, board[i][j]);
                 SDL_Color markColor = (board[i][j] == 'X') ? COLOR_X : COLOR_O;
-                renderText(fontTitle, mark, cellX + 15, cellY + 10, markColor);
+
+                TTF_Font* cellFont = (size >= 7) ? fontNormal : fontTitle;
+                
+                int markW = 0, markH = 0;
+                TTF_SizeText(cellFont, mark.c_str(), &markW, &markH);
+                
+                int markX = cellX + (cellSizePx - markW) / 2;
+                int markY = cellY + (cellSizePx - markH) / 2;
+
+                renderText(cellFont, mark, markX, markY, markColor);
             }
         }
     }
 
-    // 🌟 VẼ HỘP "LAST MOVE" SANG TRỌNG Ở ĐÁY MÀN HÌNH
+    // 🌟 VẼ HỘP "LAST MOVE" SANG TRỌNG Ở LỀ TRÁI (Tập trung vẽ duy nhất tại đây)
     if (lastRow != -1 && lastCol != -1)
     {
-        int boxW = 360;
-        int boxH = 65;
-        int boxX = (screenWidth - boxW) / 2;
-        int boxY = screenHeight - 85;
+        int boxX = 40;
+        int boxY = 180;
+        int boxW = 220;
+        int boxH = 80;
 
-        // Nền hộp nâu
         drawRect(boxX, boxY, boxW, boxH, BTN_COLOR, true);
 
-        // 2 dòng chữ trắng căn giữa hoàn hảo
-        renderTextCentered(fontSmall, "LAST MOVE", boxY + 10, BTN_TEXT_COLOR);
-        std::string moveText = std::format("Last move placed at: {}, {}", lastRow, lastCol);
-        renderTextCentered(fontSmall, moveText, boxY + 35, BTN_TEXT_COLOR);
+        std::string line1 = "LAST MOVE:";
+        std::string line2 = std::format("({}, {})", lastRow, lastCol);
+
+        int w1 = 0, h1 = 0;
+        TTF_SizeText(fontSmall, line1.c_str(), &w1, &h1);
+        renderText(fontSmall, line1, boxX + (boxW - w1) / 2, boxY + 15, BTN_TEXT_COLOR);
+
+        int w2 = 0, h2 = 0;
+        TTF_SizeText(fontNormal, line2.c_str(), &w2, &h2);
+        renderText(fontNormal, line2, boxX + (boxW - w2) / 2, boxY + 40, BTN_TEXT_COLOR);
     }
 
     renderPresent();
@@ -444,21 +465,11 @@ void SDLRenderer::displayBoard(const char board[][BOARD_N_MAX], const int size)
  */
 void SDLRenderer::showMove(const int row, const int col)
 {
+    // 🌟 TỐI ƯU HÓA PIPELINE: 
+    // Giao hoàn toàn trách nhiệm vẽ đè cho displayBoard. 
+    // Hàm này chỉ cần cập nhật tọa độ mới nhất để tránh bị vẽ đúp và rung lắc giao diện.
     this->lastRow = row;
     this->lastCol = col;
-    
-    int boxW = 360;
-    int boxH = 65;
-    int boxX = (screenWidth - boxW) / 2;
-    int boxY = screenHeight - 85;
-
-    drawRect(boxX, boxY, boxW, boxH, BTN_COLOR, true);
-
-    renderTextCentered(fontSmall, "LAST MOVE", boxY + 10, BTN_TEXT_COLOR);
-    std::string moveText = std::format("Last move placed at: {}, {}", row, col);
-    renderTextCentered(fontSmall, moveText, boxY + 35, BTN_TEXT_COLOR);
-
-    renderPresent();
 }
 
 /**
@@ -471,9 +482,9 @@ void SDLRenderer::showMove(const int row, const int col)
  */
 void SDLRenderer::showInvalidMove()
 {
-    // Đặt ở x = 40, y = 180 (Khu vực lề trái hoàn toàn trống trải)
-    renderText(fontNormal, "INVALID MOVE!", 40, 180, ERROR_COLOR);
-    renderText(fontSmall, "Cell taken or out of bounds.", 40, 215, ERROR_COLOR);
+    // Dời cảnh báo đỏ xuống y = 280 (Ngay dưới hộp Last Move mới) để tuyệt đối an toàn
+    renderText(fontNormal, "INVALID MOVE!", 40, 280, ERROR_COLOR);
+    renderText(fontSmall, "Cell taken or out of bounds.", 40, 315, ERROR_COLOR);
     renderPresent();
 }
 

@@ -43,8 +43,8 @@ class SDLRenderer : public I_Renderer {
     const SDL_Color COLOR_BOARD         = {187, 173, 160, 255};
     const SDL_Color COLOR_CELL          = {205, 193, 180, 255};
     const SDL_Color COLOR_TEXT          = {119, 110, 101, 255};
-    const SDL_Color COLOR_X             = {242, 177, 121, 255};
-    const SDL_Color COLOR_O             = {114, 203, 224, 255};
+    const SDL_Color COLOR_X             = {219, 90, 66, 255};
+    const SDL_Color COLOR_O             = {33, 150, 243, 255};
     const SDL_Color COLOR_BTN_HOVER     = {173, 152, 132, 255};
     const SDL_Color ERROR_COLOR_HOVER   = {255, 143, 136, 255};
     const SDL_Color SUCCESS_COLOR_HOVER = {144, 223, 244, 255};
