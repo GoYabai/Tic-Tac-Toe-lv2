@@ -46,8 +46,23 @@ void SDLRenderer::init(const RunConfig &config)
     this->screenHeight = config.screenHeight;
     this->boardPadding = config.boardPadding;
 
-    SDL_Init(SDL_INIT_VIDEO);
+    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
     TTF_Init();
+
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
+        std::cout << "[Audio Error] SDL_mixer could not initialize! Error: " << Mix_GetError() << std::endl;
+    } else {
+        // Tải file nhạc từ thư mục assets
+        bgmMusic = Mix_LoadMUS("assets/bgm.mp3"); // Hoặc bgm.wav tùy anh dùng định dạng nào
+        if (!bgmMusic) {
+            std::cout << "[Audio Warning] Failed to load BGM! Error: " << Mix_GetError() << std::endl;
+        } else {
+            // Phát nhạc nền với tham số -1 để lặp lại vô hạn (infinite loop)
+            Mix_PlayMusic(bgmMusic, -1);
+            // Tùy chỉnh âm lượng nhạc nền (0 đến 128) - Để 64 cho êm dịu
+            Mix_VolumeMusic(64); 
+        }
+    }
 
     window = SDL_CreateWindow(
         "TicTacToe SDL",
@@ -594,6 +609,13 @@ void SDLRenderer::close()
         TTF_CloseFont(fontSmall);
 
     TTF_Quit();
+
+    if (bgmMusic) {
+        Mix_HaltMusic();         // Dừng phát nhạc
+        Mix_FreeMusic(bgmMusic); // Giải phóng con trỏ
+        bgmMusic = nullptr;
+    }
+    Mix_CloseAudio(); // Đóng thiết bị mixer
 
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);

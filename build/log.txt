@@ -1,20 +1,20 @@
 Tic-tac-toe Game (Version: 0.4.25022870 by baluong.87)
 ------------------------------------------------
-[INFO] - [2026-05-11 09:50:04] Logger initialized!
-[INFO] - [2026-05-11 09:50:04] SDL Renderer initialized!
-[INFO] - [2026-05-11 09:50:04] SDL Interaction initialized!
-[INFO] - [2026-05-11 09:50:04] Infra initialized!
-[INFO] - [2026-05-11 09:50:04] Engine initializing . . .
-[INFO] - [2026-05-11 09:50:04] Engine initialized!
-[INFO] - [2026-05-11 09:50:04] [Engine] Starting game . . .
-[INFO] - [2026-05-11 09:51:03] Board initialized!
-[INFO] - [2026-05-11 09:51:03] [Engine] Game started!
-[INFO] - [2026-05-11 09:51:03] [Engine] Playing game . . .
-[INFO] - [2026-05-11 09:51:09] [Engine] Game done!
-[INFO] - [2026-05-11 09:51:09] [Engine] Ending game . . .
-[INFO] - [2026-05-11 09:56:46] [Engine] Game ended!
-[INFO] - [2026-05-11 09:56:46] Engine closing . . .
-[INFO] - [2026-05-11 09:56:46] Engine closed!
-[INFO] - [2026-05-11 09:56:46] Engine destroyed!
-[INFO] - [2026-05-11 09:56:46] Infra destroyed!
-[INFO] - [2026-05-11 09:56:46] Logger closing . . .
+[INFO] - [2026-05-11 15:30:02] Logger initialized!
+[INFO] - [2026-05-11 15:30:02] SDL Renderer initialized!
+[INFO] - [2026-05-11 15:30:02] SDL Interaction initialized!
+[INFO] - [2026-05-11 15:30:02] Infra initialized!
+[INFO] - [2026-05-11 15:30:02] Engine initializing . . .
+[INFO] - [2026-05-11 15:30:02] Engine initialized!
+[INFO] - [2026-05-11 15:30:02] [Engine] Starting game . . .
+[INFO] - [2026-05-11 15:34:23] Board initialized!
+[INFO] - [2026-05-11 15:34:23] [Engine] Game started!
+[INFO] - [2026-05-11 15:34:23] [Engine] Playing game . . .
+[INFO] - [2026-05-11 15:34:26] [Engine] Game done!
+[INFO] - [2026-05-11 15:34:26] [Engine] Ending game . . .
+[INFO] - [2026-05-11 15:34:30] [Engine] Game ended!
+[INFO] - [2026-05-11 15:34:30] Engine closing . . .
+[INFO] - [2026-05-11 15:34:30] Engine closed!
+[INFO] - [2026-05-11 15:34:30] Engine destroyed!
+[INFO] - [2026-05-11 15:34:30] Infra destroyed!
+[INFO] - [2026-05-11 15:34:30] Logger closing . . .

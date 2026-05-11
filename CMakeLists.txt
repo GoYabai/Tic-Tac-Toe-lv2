@@ -14,6 +14,8 @@ file(GLOB_RECURSE SOURCES "src/*.cpp")
 find_package(SDL2 REQUIRED)
 find_package(SDL2_ttf REQUIRED)
 
+find_package(SDL2_mixer REQUIRED)
+
 # find_package(SDL3 REQUIRED) # Uncomment this if you switch to SDL3
 
 # 4. Define the executable target
@@ -40,6 +42,7 @@ target_link_libraries(game PRIVATE
     SDL2::SDL2         # Link SDL2 (standard way)
     SDL2_ttf::SDL2_ttf
     # SDL3::SDL3       # Link SDL3 (standard way)
+    SDL2_mixer::SDL2_mixer
 )
 
 # 7. Set the output directory for the executable

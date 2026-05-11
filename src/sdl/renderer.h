@@ -10,6 +10,8 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 
+#include <SDL2/SDL_mixer.h>
+
 #include "../game/interface/i_renderer.h"
 #include "../game/logic.h"
 
@@ -31,6 +33,8 @@ class SDLRenderer : public I_Renderer {
     TTF_Font* fontTitle = nullptr;
     TTF_Font* fontNormal = nullptr;
     TTF_Font* fontSmall = nullptr;
+
+    Mix_Music* bgmMusic = nullptr;
 
     int screenWidth;
     int screenHeight;
