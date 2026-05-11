@@ -35,6 +35,9 @@ class SDLRenderer : public I_Renderer {
     TTF_Font* fontSmall = nullptr;
 
     Mix_Music* bgmMusic = nullptr;
+    Mix_Chunk* soundHover = nullptr;
+    Mix_Chunk* soundClick = nullptr;
+    std::string lastHoveredItem = "";
 
     int screenWidth;
     int screenHeight;
@@ -83,6 +86,9 @@ class SDLRenderer : public I_Renderer {
     void renderTextCentered(TTF_Font* targetFont, const std::string& text, int y, SDL_Color color);
 
    public:
+
+    void playClickSound() override;
+
     /**
      * Mô tả: Constructor khởi tạo SDLRenderer.
      * Đầu vào: Không.

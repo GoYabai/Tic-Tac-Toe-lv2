@@ -161,4 +161,6 @@ class I_Renderer {
      *   Dọn dẹp tài nguyên renderer trước khi kết thúc.
      */
     virtual void close() = 0;
+
+    virtual void playClickSound() {}
 };

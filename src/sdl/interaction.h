@@ -46,6 +46,8 @@ class SDLInteraction : public I_Interaction {
 
     bool isTitleScreen = true;
 
+    void playClickSFX();
+
    public:
     /**
      * Mô tả: Constructor khởi tạo SDLInteraction.

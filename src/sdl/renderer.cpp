@@ -60,9 +60,15 @@ void SDLRenderer::init(const RunConfig &config)
             // Phát nhạc nền với tham số -1 để lặp lại vô hạn (infinite loop)
             Mix_PlayMusic(bgmMusic, -1);
             // Tùy chỉnh âm lượng nhạc nền (0 đến 128) - Để 64 cho êm dịu
-            Mix_VolumeMusic(64); 
+            Mix_VolumeMusic(22); 
         }
     }
+
+    soundHover = Mix_LoadWAV("assets/hover.wav");
+    if (!soundHover) std::cout << "[Audio Warning] Failed to load hover SFX! Error: " << Mix_GetError() << std::endl;
+
+    soundClick = Mix_LoadWAV("assets/click.wav");
+    if (!soundClick) std::cout << "[Audio Warning] Failed to load click SFX! Error: " << Mix_GetError() << std::endl;
 
     window = SDL_CreateWindow(
         "TicTacToe SDL",
@@ -199,6 +205,9 @@ void SDLRenderer::showSelectMenu(SelectType selectType, int context)
     int mx, my;
     SDL_GetMouseState(&mx, &my);
 
+    // 🌟 BIẾN THEO DÕI: Ghi nhận chính xác ID của item đang được chuột chạm vào tại frame này
+    std::string currentHoveredItem = "";
+
     switch (selectType)
     {
     case SelectType::TITLE_UI:
@@ -235,6 +244,9 @@ void SDLRenderer::showSelectMenu(SelectType selectType, int context)
             bool isThisBtnHovered = (mx >= x && mx <= x + btnW && my >= y && my <= y + btnH);
             SDL_Color currentNumBtnColor = isThisBtnHovered ? COLOR_BTN_HOVER : BTN_COLOR;
 
+            // Bắt ID nút số đang hover
+            if (isThisBtnHovered) currentHoveredItem = "btn_" + std::to_string(val);
+
             drawRect(x, y, btnW, btnH, currentNumBtnColor, true);
 
             int offsetX = (val < 10) ? 27 : 20; 
@@ -247,11 +259,15 @@ void SDLRenderer::showSelectMenu(SelectType selectType, int context)
 
         bool isDelHovered = (mx >= startX + 215 && mx <= startX + 215 + 80 && my >= bottomY && my <= bottomY + 60);
         SDL_Color currentDelColor = isDelHovered ? ERROR_COLOR_HOVER : ERROR_COLOR;
+        if (isDelHovered) currentHoveredItem = "btn_DEL";
+
         drawRect(startX + 215, bottomY, 80, 60, currentDelColor, true);
         renderText(fontNormal, "DEL", startX + 225, bottomY + 15, BTN_TEXT_COLOR);
 
         bool isOkHovered = (mx >= startX + 310 && mx <= startX + 310 + 100 && my >= bottomY && my <= bottomY + 60);
         SDL_Color currentOkColor = isOkHovered ? SUCCESS_COLOR_HOVER : SUCCESS_COLOR;
+        if (isOkHovered) currentHoveredItem = "btn_OK";
+
         drawRect(startX + 310, bottomY, 100, 60, currentOkColor, true);
         renderText(fontNormal, "OK", startX + 335, bottomY + 15, BTN_TEXT_COLOR);
         break;
@@ -280,6 +296,10 @@ void SDLRenderer::showSelectMenu(SelectType selectType, int context)
 
             bool isThisBtnHovered = (mx >= x && mx <= x + btnW && my >= y && my <= y + btnH);
             SDL_Color currentNumBtnColor = isThisBtnHovered ? COLOR_BTN_HOVER : BTN_COLOR;
+            
+            // Bắt ID nút goal đang hover
+            if (isThisBtnHovered) currentHoveredItem = "btn_" + std::to_string(val);
+
             drawRect(x, y, btnW, btnH, currentNumBtnColor, true);
 
             int offsetX = (val < 10) ? 27 : 20;
@@ -292,11 +312,15 @@ void SDLRenderer::showSelectMenu(SelectType selectType, int context)
 
         bool isDelHovered = (mx >= startX + 215 && mx <= startX + 215 + 80 && my >= bottomY && my <= bottomY + 60);
         SDL_Color currentDelColor = isDelHovered ? ERROR_COLOR_HOVER : ERROR_COLOR;
+        if (isDelHovered) currentHoveredItem = "btn_DEL";
+
         drawRect(startX + 215, bottomY, 80, 60, currentDelColor, true);
         renderText(fontNormal, "DEL", startX + 225, bottomY + 15, BTN_TEXT_COLOR);
 
         bool isOkHovered = (mx >= startX + 310 && mx <= startX + 310 + 100 && my >= bottomY && my <= bottomY + 60);
         SDL_Color currentOkColor = isOkHovered ? SUCCESS_COLOR_HOVER : SUCCESS_COLOR;
+        if (isOkHovered) currentHoveredItem = "btn_OK";
+
         drawRect(startX + 310, bottomY, 100, 60, currentOkColor, true);
         renderText(fontNormal, "OK", startX + 335, bottomY + 15, BTN_TEXT_COLOR);
         break;
@@ -325,8 +349,30 @@ void SDLRenderer::showSelectMenu(SelectType selectType, int context)
     int spacing = 80;
     for (size_t i = 0; i < buttons.size(); i++)
     {
-        drawButton(buttons[i], startY + i * spacing);
+        // Bắt ID cho các nút bấm chuẩn dạng danh sách (TITLE, GAME_MODE, BOT_LEVEL)
+        int w = 400;
+        int h = 60;
+        int x = (screenWidth - w) / 2;
+        int currentBtnY = startY + i * spacing;
+        if (mx >= x && mx <= x + w && my >= currentBtnY && my <= currentBtnY + h) {
+            currentHoveredItem = "btn_" + buttons[i];
+        }
+
+        drawButton(buttons[i], currentBtnY);
     }
+
+    // =========================================================================
+    // 🚀 ĐỈNH CAO AUDIO SFX: PHÁT HIỆN KHOẢNH KHẮC CHUỘT CHUYỂN NÚT
+    // =========================================================================
+    // Chỉ phát tiếng kêu đúng 1 lần duy nhất khi ID nút hiện tại KHÁC với ID nút trước đó
+    if (!currentHoveredItem.empty() && currentHoveredItem != lastHoveredItem)
+    {
+        if (soundHover) {
+            Mix_PlayChannel(-1, soundHover, 0);
+        }
+    }
+    // Cập nhật lại bộ nhớ đệm
+    lastHoveredItem = currentHoveredItem;
 
     std::string footerText = "Hint: Use Keyboard to type or Mouse to click";
     renderText(fontSmall, footerText, 20, screenHeight - 40, COLOR_TEXT);
@@ -610,6 +656,9 @@ void SDLRenderer::close()
 
     TTF_Quit();
 
+    if (soundHover) { Mix_FreeChunk(soundHover); soundHover = nullptr; }
+    if (soundClick) { Mix_FreeChunk(soundClick); soundClick = nullptr; }
+
     if (bgmMusic) {
         Mix_HaltMusic();         // Dừng phát nhạc
         Mix_FreeMusic(bgmMusic); // Giải phóng con trỏ
@@ -620,4 +669,11 @@ void SDLRenderer::close()
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
+}
+
+void SDLRenderer::playClickSound()
+{
+    if (soundClick) {
+        Mix_PlayChannel(-1, soundClick, 0);
+    }
 }
