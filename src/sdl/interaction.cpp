@@ -610,16 +610,28 @@ bool SDLInteraction::getPlayerMove(int* row, int* col) {
 
     SDL_FlushEvents(SDL_FIRSTEVENT, SDL_LASTEVENT);
 
+    // 🌟 KHỞI TẠO GIAO DIỆN TYPING: Hiển thị trạng thái sẵn sàng với ký tự trỏ "_" ngay đầu lượt
+    if (this->renderer) {
+        this->renderer->showTypingGameBuffer(inputBuffer);
+    }
+
     while (waiting) {
         if (SDL_WaitEvent(&event)) {
             if (waitForQuit(event)) {}
 
+            // A. XỬ LÝ GÕ PHÍM TRỰC TIẾP
             if (event.type == SDL_TEXTINPUT) {
                 char c = event.text.text[0];
+                // Hỗ trợ gõ các phím số và phím khoảng cách để tách tọa độ
                 if ((c >= '0' && c <= '9') || c == ' ') {
                     playClickSFX();
                     inputBuffer += c;
                     std::cout << c << std::flush;
+
+                    // 🌟 CẬP NHẬT TRỰC QUAN LUỒNG CHỮ VỪA GÕ LÊN MÀN HÌNH
+                    if (this->renderer) {
+                        this->renderer->showTypingGameBuffer(inputBuffer);
+                    }
                 }
             }
             else if (event.type == SDL_KEYDOWN) {
@@ -627,6 +639,11 @@ bool SDLInteraction::getPlayerMove(int* row, int* col) {
                     playClickSFX();
                     inputBuffer.pop_back();
                     std::cout << "\b \b" << std::flush;
+
+                    // 🌟 PHẢN HỒI GIAO DIỆN KHI NGƯỜI CHƠI XÓA LÙI KÝ TỰ
+                    if (this->renderer) {
+                        this->renderer->showTypingGameBuffer(inputBuffer);
+                    }
                 }
                 else if (event.key.keysym.sym == SDLK_RETURN || event.key.keysym.sym == SDLK_KP_ENTER) {
                     std::cout << std::endl;
@@ -639,18 +656,28 @@ bool SDLInteraction::getPlayerMove(int* row, int* col) {
                                 *row = r;
                                 *col = c;
                                 SDL_StopTextInput();
+
+                                // 🌟 DỌN DẸP SẠCH SẼ Ô TYPING KHI ĐÃ ĐIỀN TỌA ĐỘ THÀNH CÔNG
+                                if (this->renderer) {
+                                    this->renderer->showTypingGameBuffer("");
+                                }
                                 return true;
                             } else {
                                 std::cout << "[SDL Input Error] Cell out of bounds!\n[SDL Input] Try again: " << std::flush;
                                 inputBuffer = "";
+                                // Xóa rỗng ô Typing trên giao diện nếu nhập tọa độ vượt quá giới hạn
+                                if (this->renderer) this->renderer->showTypingGameBuffer(inputBuffer);
                             }
                         } else {
-                            std::cout << "[SDL Input Error] Invalid format!\n[SDL Input] Try lại: " << std::flush;
+                            std::cout << "[SDL Input Error] Invalid format!\n[SDL Input] Try again: " << std::flush;
                             inputBuffer = "";
+                            // Xóa rỗng ô Typing trên giao diện nếu gõ sai cú pháp phân tách
+                            if (this->renderer) this->renderer->showTypingGameBuffer(inputBuffer);
                         }
                     }
                 }
             }
+            // B. XỬ LÝ ĐIỀN TỌA ĐỘ BẰNG CLICK CHUỘT
             else if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT) {
                 int mx = event.button.x;
                 int my = event.button.y;
@@ -669,6 +696,11 @@ bool SDLInteraction::getPlayerMove(int* row, int* col) {
                             
                             std::cout << "Mouse clicked on cell (" << i << ", " << j << ")" << std::endl;
                             SDL_StopTextInput();
+
+                            // 🌟 DỌN DẸP SẠCH SẼ Ô TYPING NẾU NGƯỜI CHƠI CHỌN DÙNG CHUỘT
+                            if (this->renderer) {
+                                this->renderer->showTypingGameBuffer("");
+                            }
                             return true;
                         }
                     }

@@ -543,9 +543,43 @@ void SDLRenderer::showMove(const int row, const int col)
  */
 void SDLRenderer::showInvalidMove()
 {
-    // Dời cảnh báo đỏ xuống y = 280 (Ngay dưới hộp Last Move mới) để tuyệt đối an toàn
-    renderText(fontNormal, "INVALID MOVE!", 40, 280, ERROR_COLOR);
-    renderText(fontSmall, "Cell taken or out of bounds.", 40, 315, ERROR_COLOR);
+    // 🌟 DỜI TỌA ĐỘ CẢNH BÁO XUỐNG y = 380: Nhường trọn không gian y = 280 cho ô Typing mới
+    renderText(fontNormal, "INVALID MOVE!", 40, 380, ERROR_COLOR);
+    renderText(fontSmall, "Cell taken or out of bounds.", 40, 415, ERROR_COLOR);
+    renderPresent();
+}
+
+/**
+ * Mô tả: Hiển thị trực quan ô chứa nội dung gõ phím của người chơi ở lề trái.
+ * Đầu vào: buffer - chuỗi ký tự hiện tại đang được gõ.
+ * Đầu ra: Không.
+ * Tác dụng phụ: Vẽ đè khối hộp giao diện mới lên lề trái.
+ */
+void SDLRenderer::showTypingGameBuffer(const std::string& buffer)
+{
+    // Tọa độ lề trái hoàn hảo: Đặt ngay dưới ô Last Move (y=180 + h=80 + gap=20)
+    int boxX = 40;
+    int boxY = 280;
+    int boxW = 220;
+    int boxH = 80;
+
+    // Vẽ lớp nền hộp màu nâu (Tự động xóa sạch nét chữ cũ của các frame trước)
+    drawRect(boxX, boxY, boxW, boxH, BTN_COLOR, true);
+
+    std::string line1 = "TYPING: (row col)";
+    // Hiển thị trực quan con trỏ nhấp nháy "_" ở cuối chuỗi
+    std::string line2 = buffer.empty() ? "_" : buffer + "_";
+
+    // Căn giữa tiêu đề hộp
+    int w1 = 0, h1 = 0;
+    TTF_SizeText(fontSmall, line1.c_str(), &w1, &h1);
+    renderText(fontSmall, line1, boxX + (boxW - w1) / 2, boxY + 15, BTN_TEXT_COLOR);
+
+    // Căn giữa nội dung phím đang gõ
+    int w2 = 0, h2 = 0;
+    TTF_SizeText(fontNormal, line2.c_str(), &w2, &h2);
+    renderText(fontNormal, line2, boxX + (boxW - w2) / 2, boxY + 40, BTN_TEXT_COLOR);
+
     renderPresent();
 }
 

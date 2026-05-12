@@ -89,6 +89,8 @@ class SDLRenderer : public I_Renderer {
 
     void playClickSound() override;
 
+    void showTypingGameBuffer(const std::string& buffer) override;
+
     /**
      * Mô tả: Constructor khởi tạo SDLRenderer.
      * Đầu vào: Không.

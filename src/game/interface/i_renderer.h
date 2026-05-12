@@ -163,4 +163,5 @@ class I_Renderer {
     virtual void close() = 0;
 
     virtual void playClickSound() {}
+    virtual void showTypingGameBuffer(const std::string& buffer) {}
 };
