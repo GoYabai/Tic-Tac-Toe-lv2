@@ -17,7 +17,7 @@
 void SDLInteraction::playClickSFX()
 {
     if (this->renderer) {
-        this->renderer->playClickSound(); // Gọi xuyên suốt qua Abstract Interface
+        this->renderer->playClickSound();
     }
 }
 
@@ -188,7 +188,6 @@ bool SDLInteraction::selectSize(int* size) {
         if (SDL_WaitEvent(&event)) {
             if (waitForQuit(event)) {}
 
-            // A. XỬ LÝ BÀN PHÍM
             if (event.type == SDL_TEXTINPUT) {
                 char c = event.text.text[0];
                 if (c >= '0' && c <= '9') {
@@ -205,19 +204,18 @@ bool SDLInteraction::selectSize(int* size) {
                     if (!inputBuffer.empty()) {
                         playClickSFX();
                         
-                        // 🌟 KIỂM TRA LỖI TRỰC TIẾP TRƯỚC KHI THOÁT VÒNG LẶP
                         try {
                             int checkVal = std::stoi(inputBuffer);
                             if (checkVal >= 3 && checkVal <= 12) {
-                                // Hợp lệ -> Cho phép thoát để đi tiếp
+
                                 waiting = false;
                             } else {
-                                // Sai phạm vi -> Kích hoạt hiển thị lỗi rõ ràng
+
                                 if (this->renderer) {
                                     this->renderer->showInvalidSelect(SelectType::SIZE_UI, checkVal);
-                                    SDL_Delay(1200); // Tạm dừng 1.2s để người chơi kịp nhìn thấy cảnh báo
+                                    SDL_Delay(1200);
                                 }
-                                inputBuffer = ""; // Reset sạch bộ đệm để nhập lại từ đầu
+                                inputBuffer = "";
                                 SDL_FlushEvents(SDL_FIRSTEVENT, SDL_LASTEVENT);
                             }
                         } catch (...) {
@@ -232,7 +230,7 @@ bool SDLInteraction::selectSize(int* size) {
                 }
             }
 
-            // B. XỬ LÝ CLICK CHUỘT
+
             else if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT) {
                 int mx = event.button.x;
                 int my = event.button.y;
@@ -263,7 +261,6 @@ bool SDLInteraction::selectSize(int* size) {
                     if (!inputBuffer.empty()) {
                         playClickSFX();
                         
-                        // 🌟 KIỂM TRA LỖI KHI BẤM NÚT OK TRÊN GIAO DIỆN
                         try {
                             int checkVal = std::stoi(inputBuffer);
                             if (checkVal >= 3 && checkVal <= 12) {
@@ -298,7 +295,6 @@ bool SDLInteraction::selectSize(int* size) {
             *size = val;
             this->currentBoardSize = val;
             
-            // Hiển thị thông báo hợp lệ trọn vẹn trước khi chuyển cảnh
             if (this->renderer) {
                 this->renderer->showValidSelect(SelectType::SIZE_UI, val);
                 SDL_Delay(500);
@@ -359,7 +355,6 @@ bool SDLInteraction::selectGoal(int* goal, const int size) {
                     if (!inputBuffer.empty()) {
                         playClickSFX();
                         
-                        // 🌟 KIỂM TRA LỖI KHI BẤM ENTER Ở MÀN HÌNH GOAL
                         try {
                             int checkVal = std::stoi(inputBuffer);
                             if (checkVal >= 3 && checkVal <= size) {
@@ -411,7 +406,6 @@ bool SDLInteraction::selectGoal(int* goal, const int size) {
                     if (!inputBuffer.empty()) {
                         playClickSFX();
                         
-                        // 🌟 KIỂM TRA LỖI KHI BẤM NÚT OK TRÊN GIAO DIỆN GOAL
                         try {
                             int checkVal = std::stoi(inputBuffer);
                             if (checkVal >= 3 && checkVal <= size) {
@@ -610,7 +604,6 @@ bool SDLInteraction::getPlayerMove(int* row, int* col) {
 
     SDL_FlushEvents(SDL_FIRSTEVENT, SDL_LASTEVENT);
 
-    // 🌟 KHỞI TẠO GIAO DIỆN TYPING: Hiển thị trạng thái sẵn sàng với ký tự trỏ "_" ngay đầu lượt
     if (this->renderer) {
         this->renderer->showTypingGameBuffer(inputBuffer);
     }
@@ -619,16 +612,13 @@ bool SDLInteraction::getPlayerMove(int* row, int* col) {
         if (SDL_WaitEvent(&event)) {
             if (waitForQuit(event)) {}
 
-            // A. XỬ LÝ GÕ PHÍM TRỰC TIẾP
             if (event.type == SDL_TEXTINPUT) {
                 char c = event.text.text[0];
-                // Hỗ trợ gõ các phím số và phím khoảng cách để tách tọa độ
                 if ((c >= '0' && c <= '9') || c == ' ') {
                     playClickSFX();
                     inputBuffer += c;
                     std::cout << c << std::flush;
 
-                    // 🌟 CẬP NHẬT TRỰC QUAN LUỒNG CHỮ VỪA GÕ LÊN MÀN HÌNH
                     if (this->renderer) {
                         this->renderer->showTypingGameBuffer(inputBuffer);
                     }
@@ -640,7 +630,6 @@ bool SDLInteraction::getPlayerMove(int* row, int* col) {
                     inputBuffer.pop_back();
                     std::cout << "\b \b" << std::flush;
 
-                    // 🌟 PHẢN HỒI GIAO DIỆN KHI NGƯỜI CHƠI XÓA LÙI KÝ TỰ
                     if (this->renderer) {
                         this->renderer->showTypingGameBuffer(inputBuffer);
                     }
@@ -657,7 +646,6 @@ bool SDLInteraction::getPlayerMove(int* row, int* col) {
                                 *col = c;
                                 SDL_StopTextInput();
 
-                                // 🌟 DỌN DẸP SẠCH SẼ Ô TYPING KHI ĐÃ ĐIỀN TỌA ĐỘ THÀNH CÔNG
                                 if (this->renderer) {
                                     this->renderer->showTypingGameBuffer("");
                                 }
@@ -677,7 +665,7 @@ bool SDLInteraction::getPlayerMove(int* row, int* col) {
                     }
                 }
             }
-            // B. XỬ LÝ ĐIỀN TỌA ĐỘ BẰNG CLICK CHUỘT
+
             else if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT) {
                 int mx = event.button.x;
                 int my = event.button.y;
@@ -697,7 +685,7 @@ bool SDLInteraction::getPlayerMove(int* row, int* col) {
                             std::cout << "Mouse clicked on cell (" << i << ", " << j << ")" << std::endl;
                             SDL_StopTextInput();
 
-                            // 🌟 DỌN DẸP SẠCH SẼ Ô TYPING NẾU NGƯỜI CHƠI CHỌN DÙNG CHUỘT
+
                             if (this->renderer) {
                                 this->renderer->showTypingGameBuffer("");
                             }

@@ -52,14 +52,11 @@ void SDLRenderer::init(const RunConfig &config)
     if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
         std::cout << "[Audio Error] SDL_mixer could not initialize! Error: " << Mix_GetError() << std::endl;
     } else {
-        // Tải file nhạc từ thư mục assets
-        bgmMusic = Mix_LoadMUS("assets/bgm.mp3"); // Hoặc bgm.wav tùy anh dùng định dạng nào
+        bgmMusic = Mix_LoadMUS("assets/bgm.mp3");
         if (!bgmMusic) {
             std::cout << "[Audio Warning] Failed to load BGM! Error: " << Mix_GetError() << std::endl;
         } else {
-            // Phát nhạc nền với tham số -1 để lặp lại vô hạn (infinite loop)
             Mix_PlayMusic(bgmMusic, -1);
-            // Tùy chỉnh âm lượng nhạc nền (0 đến 128) - Để 64 cho êm dịu
             Mix_VolumeMusic(22); 
         }
     }
@@ -205,7 +202,6 @@ void SDLRenderer::showSelectMenu(SelectType selectType, int context)
     int mx, my;
     SDL_GetMouseState(&mx, &my);
 
-    // 🌟 BIẾN THEO DÕI: Ghi nhận chính xác ID của item đang được chuột chạm vào tại frame này
     std::string currentHoveredItem = "";
 
     switch (selectType)
@@ -244,7 +240,6 @@ void SDLRenderer::showSelectMenu(SelectType selectType, int context)
             bool isThisBtnHovered = (mx >= x && mx <= x + btnW && my >= y && my <= y + btnH);
             SDL_Color currentNumBtnColor = isThisBtnHovered ? COLOR_BTN_HOVER : BTN_COLOR;
 
-            // Bắt ID nút số đang hover
             if (isThisBtnHovered) currentHoveredItem = "btn_" + std::to_string(val);
 
             drawRect(x, y, btnW, btnH, currentNumBtnColor, true);
@@ -297,7 +292,6 @@ void SDLRenderer::showSelectMenu(SelectType selectType, int context)
             bool isThisBtnHovered = (mx >= x && mx <= x + btnW && my >= y && my <= y + btnH);
             SDL_Color currentNumBtnColor = isThisBtnHovered ? COLOR_BTN_HOVER : BTN_COLOR;
             
-            // Bắt ID nút goal đang hover
             if (isThisBtnHovered) currentHoveredItem = "btn_" + std::to_string(val);
 
             drawRect(x, y, btnW, btnH, currentNumBtnColor, true);
@@ -349,7 +343,7 @@ void SDLRenderer::showSelectMenu(SelectType selectType, int context)
     int spacing = 80;
     for (size_t i = 0; i < buttons.size(); i++)
     {
-        // Bắt ID cho các nút bấm chuẩn dạng danh sách (TITLE, GAME_MODE, BOT_LEVEL)
+
         int w = 400;
         int h = 60;
         int x = (screenWidth - w) / 2;
@@ -361,17 +355,14 @@ void SDLRenderer::showSelectMenu(SelectType selectType, int context)
         drawButton(buttons[i], currentBtnY);
     }
 
-    // =========================================================================
-    // 🚀 ĐỈNH CAO AUDIO SFX: PHÁT HIỆN KHOẢNH KHẮC CHUỘT CHUYỂN NÚT
-    // =========================================================================
-    // Chỉ phát tiếng kêu đúng 1 lần duy nhất khi ID nút hiện tại KHÁC với ID nút trước đó
+    
     if (!currentHoveredItem.empty() && currentHoveredItem != lastHoveredItem)
     {
         if (soundHover) {
             Mix_PlayChannel(-1, soundHover, 0);
         }
     }
-    // Cập nhật lại bộ nhớ đệm
+
     lastHoveredItem = currentHoveredItem;
 
     std::string footerText = "Hint: Use Keyboard to type or Mouse to click";
@@ -436,11 +427,10 @@ void SDLRenderer::displayBoard(const char board[][BOARD_N_MAX], const int size)
     int startX = (screenWidth - boardSizePx) / 2;
     int startY = boardPadding;
 
-    // 1. VẼ KHUNG NỀN NÂU BAO BỌC CHỈ MỤC
+
     int headerOffset = 45; 
     drawRect(startX - headerOffset, startY - headerOffset, boardSizePx + headerOffset, boardSizePx + headerOffset, COLOR_BOARD, true);
 
-    // 2. VẼ CÁC CON SỐ CHỈ MỤC (MÀU TRẮNG SÁNG)
     for (int k = 0; k < size; k++)
     {
         std::string numStr = std::to_string(k);
@@ -453,7 +443,7 @@ void SDLRenderer::displayBoard(const char board[][BOARD_N_MAX], const int size)
         renderText(fontNormal, numStr, startX - 40, centerOfCellY - 14, BTN_TEXT_COLOR);
     }
 
-    // Vòng lặp vẽ ô cờ tĩnh và highlight
+
     for (int i = 0; i < size; i++)
     {
         for (int j = 0; j < size; j++)
@@ -463,9 +453,7 @@ void SDLRenderer::displayBoard(const char board[][BOARD_N_MAX], const int size)
 
             drawRect(cellX, cellY, cellSizePx, cellSizePx, COLOR_CELL, true);
 
-            // 🌟 ĐÃ SỬA LỖI VIỀN KÌ KÌ: 
-            // Trả lại đúng biến cellSizePx - 2 cho cả chiều rộng lẫn chiều cao của lớp viền trong.
-            // Đảm bảo 2 lớp viền lồng nhau tạo thành khung dày 2px vuông vắn, hoàn hảo tuyệt đối.
+            
             if (lastRow != -1 && lastCol != -1 && i == lastRow && j == lastCol)
             {
                 drawRect(cellX, cellY, cellSizePx, cellSizePx, SUCCESS_COLOR, false);
@@ -490,7 +478,6 @@ void SDLRenderer::displayBoard(const char board[][BOARD_N_MAX], const int size)
         }
     }
 
-    // 🌟 VẼ HỘP "LAST MOVE" SANG TRỌNG Ở LỀ TRÁI (Tập trung vẽ duy nhất tại đây)
     if (lastRow != -1 && lastCol != -1)
     {
         int boxX = 40;
@@ -526,9 +513,7 @@ void SDLRenderer::displayBoard(const char board[][BOARD_N_MAX], const int size)
  */
 void SDLRenderer::showMove(const int row, const int col)
 {
-    // 🌟 TỐI ƯU HÓA PIPELINE: 
-    // Giao hoàn toàn trách nhiệm vẽ đè cho displayBoard. 
-    // Hàm này chỉ cần cập nhật tọa độ mới nhất để tránh bị vẽ đúp và rung lắc giao diện.
+
     this->lastRow = row;
     this->lastCol = col;
 }
@@ -543,7 +528,7 @@ void SDLRenderer::showMove(const int row, const int col)
  */
 void SDLRenderer::showInvalidMove()
 {
-    // 🌟 DỜI TỌA ĐỘ CẢNH BÁO XUỐNG y = 380: Nhường trọn không gian y = 280 cho ô Typing mới
+
     renderText(fontNormal, "INVALID MOVE!", 40, 380, ERROR_COLOR);
     renderText(fontSmall, "Cell taken or out of bounds.", 40, 415, ERROR_COLOR);
     renderPresent();
@@ -557,25 +542,23 @@ void SDLRenderer::showInvalidMove()
  */
 void SDLRenderer::showTypingGameBuffer(const std::string& buffer)
 {
-    // Tọa độ lề trái hoàn hảo: Đặt ngay dưới ô Last Move (y=180 + h=80 + gap=20)
+
     int boxX = 40;
     int boxY = 280;
     int boxW = 220;
     int boxH = 80;
 
-    // Vẽ lớp nền hộp màu nâu (Tự động xóa sạch nét chữ cũ của các frame trước)
     drawRect(boxX, boxY, boxW, boxH, BTN_COLOR, true);
 
     std::string line1 = "TYPING: (row col)";
-    // Hiển thị trực quan con trỏ nhấp nháy "_" ở cuối chuỗi
     std::string line2 = buffer.empty() ? "_" : buffer + "_";
 
-    // Căn giữa tiêu đề hộp
+
     int w1 = 0, h1 = 0;
     TTF_SizeText(fontSmall, line1.c_str(), &w1, &h1);
     renderText(fontSmall, line1, boxX + (boxW - w1) / 2, boxY + 15, BTN_TEXT_COLOR);
 
-    // Căn giữa nội dung phím đang gõ
+
     int w2 = 0, h2 = 0;
     TTF_SizeText(fontNormal, line2.c_str(), &w2, &h2);
     renderText(fontNormal, line2, boxX + (boxW - w2) / 2, boxY + 40, BTN_TEXT_COLOR);
@@ -599,16 +582,15 @@ void SDLRenderer::showPlayer(const int player, const bool is_bot)
     std::string line1 = "TURN:";
     std::string line2 = std::format("{} ({})", playerName, mark);
 
-    // 🌟 KHỐI HỘP TURN Ở LỀ TRÁI
     int boxX = 40;
     int boxY = 80;
     int boxW = 220;
     int boxH = 80;
 
-    // Vẽ nền hộp nâu
+
     drawRect(boxX, boxY, boxW, boxH, BTN_COLOR, true);
 
-    // Tự động tính toán chiều rộng thực tế của chữ để căn giữa chính xác vào lòng hộp
+
     int w1 = 0, h1 = 0;
     TTF_SizeText(fontSmall, line1.c_str(), &w1, &h1);
     renderText(fontSmall, line1, boxX + (boxW - w1) / 2, boxY + 15, BTN_TEXT_COLOR);
@@ -632,7 +614,7 @@ void SDLRenderer::showPlayer(const int player, const bool is_bot)
  */
 void SDLRenderer::showResult(const int winner, const bool is_bot, const WinLine *winLine)
 {
-    // TODO: Render result
+
     SDL_Color overlayColor = {COLOR_BG.r, COLOR_BG.g, COLOR_BG.b, 200};
     drawRect(0, 0, screenWidth, screenHeight, overlayColor, true);
     std::string resultText = "";
@@ -694,11 +676,11 @@ void SDLRenderer::close()
     if (soundClick) { Mix_FreeChunk(soundClick); soundClick = nullptr; }
 
     if (bgmMusic) {
-        Mix_HaltMusic();         // Dừng phát nhạc
-        Mix_FreeMusic(bgmMusic); // Giải phóng con trỏ
+        Mix_HaltMusic();
+        Mix_FreeMusic(bgmMusic);
         bgmMusic = nullptr;
     }
-    Mix_CloseAudio(); // Đóng thiết bị mixer
+    Mix_CloseAudio();
 
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
