@@ -14,6 +14,8 @@
 
 #include "../utils/logger.h"
 
+#include "../game/logic.h"
+
 /* ---------- Definitions ---------- */
 
 TerminalInteraction::TerminalInteraction() {
@@ -180,13 +182,12 @@ void TerminalInteraction::pause(int timeout) {
 bool TerminalInteraction::selectSize(int* size) {
     // TODO: Đọc input size
     // TODO: Validate range hợp lệ
-    if (getInput(size) == false)
-    {
+    if (getInput(size) == false) {
         Logger::log("Please input size!", Logger::Level::WARNING);
         return false;
     }
-    if (*size < 3 || *size > BOARD_N_MAX)
-    {
+    
+    if (!Logic::isValidBoardSize(*size)) {
         Logger::log("Input number is out of range!", Logger::Level::WARNING);
         return false;
     }
@@ -211,8 +212,7 @@ bool TerminalInteraction::selectGoal(int* goal, const int size) {
         Logger::log("Please input size!", Logger::Level::WARNING);
         return false;
     }
-    if (*goal < 3 || *goal > size)
-    {
+    if (!Logic::isValidGoal(*goal, size)) {
         Logger::log("Input number is out of range!", Logger::Level::WARNING);
         return false;
     }
@@ -238,8 +238,7 @@ bool TerminalInteraction::selectGameMode(GameMode* mode) {
         Logger::log("Please input!", Logger::Level::WARNING);
         return false;
     }
-    if (input < 1 || input > 3)
-    {
+    if (!Logic::isValidGameMode(input)) {
         Logger::log("Input number is out of range!", Logger::Level::WARNING);
         return false;
     }
@@ -273,8 +272,7 @@ bool TerminalInteraction::selectBotLevel(BotLevel* levels, const int index) {
         Logger::log("Please input!", Logger::Level::WARNING);
         return false;
     }
-    if (input < 1 || input > 3)
-    {
+    if (!Logic::isValidBotLevel(input)) {
         Logger::log("Input number is out of range!", Logger::Level::WARNING);
         return false;
     }

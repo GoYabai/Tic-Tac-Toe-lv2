@@ -281,3 +281,19 @@ std::optional<WinLine> Logic::getWinLine(
     return std::nullopt;
 
 }
+
+bool Logic::isValidBoardSize(int size) {
+    return (size >= BOARD_N_MIN && size <= BOARD_N_MAX); 
+}
+
+bool Logic::isValidGoal(int goal, int size) {
+    return (goal >= 3 && goal <= size);
+}
+
+bool Logic::isValidGameMode(int mode) {
+    return (mode >= 1 && mode <= 3);
+}
+
+bool Logic::isValidBotLevel(int level) {
+    return (level >= 1 && level <= 3);
+}

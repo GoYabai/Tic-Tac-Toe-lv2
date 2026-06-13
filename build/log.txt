@@ -1,68 +1,18 @@
 Tic-tac-toe Game (Version: 0.4.25022870 by baluong.87)
 ------------------------------------------------
-[INFO] - [2026-05-17 16:56:29] Logger initialized!
-[DEBUG] - [2026-05-17 16:56:29] RunConfig {
-  interactive:  true
-  judge_mode:   false
-  input_file:   ""
-  to_file:      true
-  log_file:     "log.txt"
-  verbose_flag: true
-  gui_flag:     true
-  is_help:      false
-}
-[INFO] - [2026-05-17 16:56:29] SDL Renderer initialized!
-[INFO] - [2026-05-17 16:56:29] SDL Interaction initialized!
-[INFO] - [2026-05-17 16:56:29] Infra initialized!
-[INFO] - [2026-05-17 16:56:29] Engine initializing . . .
-[INFO] - [2026-05-17 16:56:29] Engine initialized!
-[INFO] - [2026-05-17 16:56:29] [Engine] Starting game . . .
-[DEBUG] - [2026-05-17 16:57:02] user input 'size' = 3
-[DEBUG] - [2026-05-17 16:57:14] user input 'goal' = 3
-[DEBUG] - [2026-05-17 16:57:20] user input 'game mode' = PVE
-[DEBUG] - [2026-05-17 16:57:24] user input 'bot level' = HARD
-[INFO] - [2026-05-17 16:57:24] Board initialized!
-[INFO] - [2026-05-17 16:57:24] [Engine] Game started!
-[INFO] - [2026-05-17 16:57:24] [Engine] Playing game . . .
-[DEBUG] - [2026-05-17 16:57:24] [Engine] starting turn #0
-[DEBUG] - [2026-05-17 16:57:32] player 1 make move to (1, 1)
-[DEBUG] - [2026-05-17 16:57:32] [Engine] turn done!
-[DEBUG] - [2026-05-17 16:57:32] [Engine] starting turn #1
-[DEBUG] - [2026-05-17 16:57:32] execution time of [bot#1->getMove()()] = 0.012293s
-[DEBUG] - [2026-05-17 16:57:32] player 2 make move to (0, 0)
-[DEBUG] - [2026-05-17 16:57:34] [Engine] turn done!
-[DEBUG] - [2026-05-17 16:57:34] [Engine] starting turn #2
-[DEBUG] - [2026-05-17 16:57:59] player 1 make move to (0, 1)
-[DEBUG] - [2026-05-17 16:57:59] [Engine] turn done!
-[DEBUG] - [2026-05-17 16:57:59] [Engine] starting turn #3
-[DEBUG] - [2026-05-17 16:57:59] execution time of [bot#1->getMove()()] = 3.22e-05s
-[DEBUG] - [2026-05-17 16:57:59] player 2 make move to (2, 1)
-[DEBUG] - [2026-05-17 16:58:00] [Engine] turn done!
-[DEBUG] - [2026-05-17 16:58:00] [Engine] starting turn #4
-[DEBUG] - [2026-05-17 16:58:10] player 1 make move to (2, 0)
-[DEBUG] - [2026-05-17 16:58:10] [Engine] turn done!
-[DEBUG] - [2026-05-17 16:58:10] [Engine] starting turn #5
-[DEBUG] - [2026-05-17 16:58:10] execution time of [bot#1->getMove()()] = 1.33e-05s
-[DEBUG] - [2026-05-17 16:58:10] player 2 make move to (0, 2)
-[DEBUG] - [2026-05-17 16:58:11] [Engine] turn done!
-[DEBUG] - [2026-05-17 16:58:11] [Engine] starting turn #6
-[DEBUG] - [2026-05-17 16:58:12] player 1 make move to (1, 2)
-[DEBUG] - [2026-05-17 16:58:12] [Engine] turn done!
-[DEBUG] - [2026-05-17 16:58:12] [Engine] starting turn #7
-[DEBUG] - [2026-05-17 16:58:12] execution time of [bot#1->getMove()()] = 6.7e-06s
-[DEBUG] - [2026-05-17 16:58:12] player 2 make move to (1, 0)
-[DEBUG] - [2026-05-17 16:58:13] [Engine] turn done!
-[DEBUG] - [2026-05-17 16:58:13] [Engine] starting turn #8
-[DEBUG] - [2026-05-17 16:58:16] player 1 make move to (2, 2)
-[DEBUG] - [2026-05-17 16:58:16] [Engine] turn done!
-[INFO] - [2026-05-17 16:58:16] [Engine] Game done!
-[INFO] - [2026-05-17 16:58:16] [Engine] Ending game . . .
-[DEBUG] - [2026-05-17 16:58:16] [WinLine] none
-[DEBUG] - [2026-05-17 16:58:20] after 9 turns
-[DEBUG] - [2026-05-17 16:58:20] game end with result: draw
-[INFO] - [2026-05-17 16:58:20] [Engine] Game ended!
-[INFO] - [2026-05-17 16:58:20] Engine closing . . .
-[INFO] - [2026-05-17 16:58:20] Engine closed!
-[INFO] - [2026-05-17 16:58:20] Engine destroyed!
-[INFO] - [2026-05-17 16:58:20] Infra destroyed!
-[INFO] - [2026-05-17 16:58:20] Logger closing . . .
+[INFO] - [2026-06-02 00:14:18] Logger initialized!
+[INFO] - [2026-06-02 00:14:18] SDL Renderer initialized!
+[INFO] - [2026-06-02 00:14:18] SDL Interaction initialized!
+[INFO] - [2026-06-02 00:14:18] Infra initialized!
+[INFO] - [2026-06-02 00:14:18] Engine initializing . . .
+[INFO] - [2026-06-02 00:14:18] Engine initialized!
+[INFO] - [2026-06-02 00:14:18] [Engine] Starting game . . .
+[INFO] - [2026-06-02 00:14:24] Board initialized!
+[INFO] - [2026-06-02 00:14:24] [Engine] Game started!
+[INFO] - [2026-06-02 00:14:24] [Engine] Playing game . . .
+[WARN] - [2026-06-02 00:14:30] Quit signal received. Cleaning up...
+[INFO] - [2026-06-02 00:14:30] Engine closing . . .
+[INFO] - [2026-06-02 00:14:30] Engine closed!
+[INFO] - [2026-06-02 00:14:30] Engine destroyed!
+[INFO] - [2026-06-02 00:14:30] Infra destroyed!
+[INFO] - [2026-06-02 00:14:30] Logger closing . . .

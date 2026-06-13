@@ -72,7 +72,7 @@ rule CUSTOM_COMMAND
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = C:\msys64\ucrt64\bin\cmake.exe --regenerate-during-build -SC:\Project\Tic-Tac-Toe-lv2 -BC:\Project\Tic-Tac-Toe-lv2\build
+  command = C:\msys64\ucrt64\bin\cmake.exe --regenerate-during-build -SC:\Project\project_level_2 -BC:\Project\project_level_2\build
   description = Re-running CMake...
   generator = 1
 

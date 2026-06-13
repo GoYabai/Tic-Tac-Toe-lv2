@@ -33,6 +33,11 @@ struct WinLine {
 
 namespace Logic {
 
+    bool isValidBoardSize(int size);
+    bool isValidGoal(int goal, int size);
+    bool isValidGameMode(int mode);
+    bool isValidBotLevel(int level);
+
 /**
  * Mô tả:
  *   Khởi tạo bàn cờ rỗng với kích thước cho trước.

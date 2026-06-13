@@ -1,7 +1,7 @@
 {
 	"InstallScripts" : 
 	[
-		"C:/Project/Tic-Tac-Toe-lv2/build/cmake_install.cmake"
+		"C:/Project/project_level_2/build/cmake_install.cmake"
 	],
 	"Parallel" : false
 }
